@@ -31,6 +31,9 @@ public class UserFragment extends Fragment{
      * navigation listener to switch between fragments
      */
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener = item -> setNavigation(item.getItemId());
+    public void setInitialItem(int initialItem) {
+        this.initialItem = initialItem;
+    }
 
     public boolean setNavigation(int itemId) {
 
