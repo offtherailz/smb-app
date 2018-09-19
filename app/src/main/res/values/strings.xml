@@ -89,5 +89,12 @@
     <string name="server_took_too_long_to_respond" >Server took to much to respond</string>
     <string name="user_profile">User Profile</string>
     <string name="badges">Badges</string>
+    <string name="profile">Profile</string>
+    <string name="first_name">First Name</string>
+    <string name="submit">Submit</string>
+    <string name="last_name">Last  Name</string>
+    <string name="email">email</string>
+    <string name="phone_number">Phone Number</string>
+    <string name="bio">Bio</string>
 
 </resources>

@@ -58,4 +58,10 @@
     <string name="no_bikes_title">Nessuna Bici</string>
     <string name="server_took_too_long_to_respond" >Il server ha impiegato troppo tempo a rispondere</string>
     <string name="user_profile">User Profile</string>
+    <string name="profile">Profilo</string>
+    <string name="first_name">First Name</string>
+    <string name="submit">Submit</string>
+    <string name="last_name">Last  Name</string>
+    <string name="phone_number">Phone Number</string>
+    <string name="bio">Bio</string>
 </resources>

@@ -34,6 +34,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 
+import com.bumptech.glide.annotation.GlideModule;
+import com.bumptech.glide.request.target.Target;
+
 import net.openid.appauth.AppAuthConfiguration;
 import net.openid.appauth.AuthState;
 import net.openid.appauth.AuthorizationService;
@@ -47,7 +50,9 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import it.geosolutions.savemybike.AuthStateManager;
 import it.geosolutions.savemybike.BuildConfig;
+import it.geosolutions.savemybike.GlideApp;
 import it.geosolutions.savemybike.R;
+import it.geosolutions.savemybike.SMBGlideModule;
 import it.geosolutions.savemybike.data.Constants;
 import it.geosolutions.savemybike.data.Util;
 import it.geosolutions.savemybike.data.server.RetrofitClient;
@@ -226,10 +231,10 @@ public class SaveMyBikeActivity extends SMBBaseActivity implements OnFragmentInt
             setupUserView(user);
         }
         updateUser();
-        /*navView.getHeaderView(0).findViewById(R.id.userName).setOnClickListener((view) -> {
-            changeFragment(R.id.userName);
+        navView.getHeaderView(0).findViewById(R.id.userName).setOnClickListener((view) -> {
+            changeFragment(R.id.navigation_user_profile);
             drawerLayout.closeDrawer(GravityCompat.START);
-        });*/
+        });
         navView.setNavigationItemSelectedListener((MenuItem menuItem) -> {
                 Fragment f = null;
                 changeFragment(menuItem.getItemId());
@@ -260,7 +265,11 @@ public class SaveMyBikeActivity extends SMBBaseActivity implements OnFragmentInt
         TextView uname = header.findViewById(R.id.userName);
         TextView email = header.findViewById(R.id.userEmail);
         ImageView avatar = header.findViewById(R.id.userAvatar);
-        avatar.setVisibility(View.GONE); // TODO Avatar
+        GlideApp.with(this)
+            .load("https://www.gravatar.com/avatar/7b040693b6f5a34a7cc8a5f1c69f5bac/?s=20%27")
+            .fitCenter()
+            .into(avatar);
+        // avatar.setVisibility(View.GONE); // TODO Avatar
         if(user != null) {
 
             if(uname != null) {
@@ -465,10 +474,12 @@ public class SaveMyBikeActivity extends SMBBaseActivity implements OnFragmentInt
 
                 break;
             }
-            case R.id.userName: {
-                if(currentFragment != null&& currentFragment instanceof UserFragment) {
-                    fragment = new UserFragment();
+            case R.id.navigation_user_profile: {
+                if(currentFragment != null && currentFragment instanceof UserFragment) {
+                    return;
                 }
+                fragment = new UserFragment();
+                break;
             }
             case R.id.navigation_bikes:
                 if (currentFragment != null && currentFragment instanceof BikeListFragment) {
