@@ -35,6 +35,7 @@ import android.widget.TextView;
 
 
 import com.bumptech.glide.annotation.GlideModule;
+import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
 
 import net.openid.appauth.AppAuthConfiguration;
@@ -42,6 +43,8 @@ import net.openid.appauth.AuthState;
 import net.openid.appauth.AuthorizationService;
 
 import java.lang.ref.WeakReference;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -260,14 +263,40 @@ public class SaveMyBikeActivity extends SMBBaseActivity implements OnFragmentInt
             }
         });
     }
+    public static final String md5(final String s) {
+        final String MD5 = "MD5";
+        try {
+            // Create MD5 Hash
+            MessageDigest digest = java.security.MessageDigest
+                    .getInstance(MD5);
+            digest.update(s.getBytes());
+            byte messageDigest[] = digest.digest();
+
+            // Create Hex String
+            StringBuilder hexString = new StringBuilder();
+            for (byte aMessageDigest : messageDigest) {
+                String h = Integer.toHexString(0xFF & aMessageDigest);
+                while (h.length() < 2)
+                    h = "0" + h;
+                hexString.append(h);
+            }
+            return hexString.toString();
+
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+        return "";
+    }
     void setupUserView(User user) {
         View header = navView.getHeaderView(0);
         TextView uname = header.findViewById(R.id.userName);
         TextView email = header.findViewById(R.id.userEmail);
         ImageView avatar = header.findViewById(R.id.userAvatar);
         GlideApp.with(this)
-            .load("https://www.gravatar.com/avatar/7b040693b6f5a34a7cc8a5f1c69f5bac/?s=20%27")
-            .fitCenter()
+            .load("https://www.gravatar.com/avatar/" + md5(user.getUsername() )+ "/?s=120&f=y")
+            .override(120, 120)
+            .fitCenter() // scale to fit entire image within ImageView
+            .apply(RequestOptions.circleCropTransform())
             .into(avatar);
         // avatar.setVisibility(View.GONE); // TODO Avatar
         if(user != null) {
