@@ -1,12 +1,16 @@
 package it.geosolutions.savemybike.ui.fragment;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 
 import java.util.ArrayList;
@@ -38,10 +42,14 @@ import retrofit2.Response;
  */
 
 public class BadgesFragment extends Fragment {
-    public static final String TAG = "BIKELIST";
-    @BindView(R.id.bikes_list) ListView listView;
+    public static final String TAG = "BADGES_LIST";
+    @BindView(R.id.list) ListView listView;
+    @BindView(R.id.content_layout) LinearLayout content;
 
-    BadgeAdapter badgeAdapter;
+    @BindView(R.id.progress_layout) LinearLayout progress;
+    @BindView(R.id.swiperefresh) SwipeRefreshLayout mySwipeRefreshLayout;
+
+    BadgeAdapter adapter;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
@@ -53,52 +61,17 @@ public class BadgesFragment extends Fragment {
         // setup adapter
         ArrayList badges = new ArrayList<Badge>();
 
-        badges.add(new Badge("new_user"));
-        badges.add(new Badge("data_collector_level0"));
-        badges.add(new Badge("data_collector_level1"));
-        badges.add(new Badge("data_collector_level2"));
-        badges.add(new Badge("data_collector_level3"));
-        badges.add(new Badge("biker_level1"));
-        badges.add(new Badge("biker_level2"));
-        badges.add(new Badge("biker_level3"));
-        badges.add(new Badge("public_mobility_level1"));
-        badges.add(new Badge("public_mobility_level2"));
-        badges.add(new Badge("public_mobility_level3"));
-        badges.add(new Badge("bike_surfer_level1"));
-        badges.add(new Badge("bike_surfer_level2"));
-        badges.add(new Badge("bike_surfer_level3"));
-        badges.add(new Badge("tpl_surfer_level1"));
-        badges.add(new Badge("tpl_surfer_level2"));
-        badges.add(new Badge("tpl_surfer_level3"));
-        badges.add(new Badge("multi_surfer_level1"));
-        badges.add(new Badge("multi_surfer_level2"));
-        badges.add(new Badge("multi_surfer_level3"));
-        badges.add(new Badge("ecologist_level1"));
-        badges.add(new Badge("ecologist_level2"));
-        badges.add(new Badge("ecologist_level3"));
-        badges.add(new Badge("healthy_level1"));
-        badges.add(new Badge("healthy_level2"));
-        badges.add(new Badge("healthy_level3"));
-        badges.add(new Badge("money_saver_level1"));
-        badges.add(new Badge("money_saver_level2"));
-        badges.add(new Badge("money_saver_level3"));
-        badgeAdapter = new BadgeAdapter(activity, R.layout.item_badge, badges);
-        listView.setAdapter(badgeAdapter);
 
-        // set up empty view
-        View empty = view.findViewById(R.id.empty_badges);
-        if(empty != null && badges != null && badges.size() > 0) {
-            empty.setVisibility(View.GONE);
-        } else {
-            empty.setVisibility(View.VISIBLE);
-        }
+        adapter = new BadgeAdapter(activity, R.layout.item_badge, badges);
+        listView.setAdapter(adapter);
+        mySwipeRefreshLayout.setOnRefreshListener(() -> getBadges());
+        getBadges();
         return view;
     }
 
     /**
      * loads the locally available sessions from the database and invalidates the UI
      */
-    /*
     private void getBadges() {
         RetrofitClient client = RetrofitClient.getInstance(this.getContext());
         SMBRemoteServices portalServices = client.getPortalServices();
@@ -106,7 +79,7 @@ public class BadgesFragment extends Fragment {
             @Override
             public void onResponse(Call<PaginatedResult<Badge>> call, Response<PaginatedResult<Badge>> response) {
                 showProgress(false);
-                PaginatedResult<TrackItem> result = response.body();
+                PaginatedResult<Badge> result = response.body();
                 if(result != null && result.getResults() != null) {
                     adapter.clear();
                     adapter.addAll(response.body().getResults());
@@ -120,11 +93,54 @@ public class BadgesFragment extends Fragment {
             }
 
             @Override
-            public void onFailure(Call<PaginatedResult<TrackItem>> call, Throwable t) {
+            public void onFailure(Call<PaginatedResult<Badge>> call, Throwable t) {
                 showProgress(false);
                 showEmpty(true);
             }
         });
-    }*/
+    }
+    /**
+     * Switches the UI of this screen to show either the progress UI or the content
+     * @param show if true shows the progress UI and hides content, if false the other way around
+     */
+    private void showProgress(final boolean show) {
+
+        if(isAdded()) {
+
+            int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
+
+            progress.setVisibility(View.VISIBLE);
+            progress.animate().setDuration(shortAnimTime)
+                    .alpha(show ? 1 : 0)
+                    .setListener(new AnimatorListenerAdapter() {
+                        @Override
+                        public void onAnimationEnd(Animator animation) {
+                            progress.setVisibility(show ? View.VISIBLE : View.GONE);
+                        }
+                    });
+
+            content.setVisibility(View.VISIBLE);
+            content.animate().setDuration(shortAnimTime)
+                    .alpha(show ? 0 : 1)
+                    .setListener(new AnimatorListenerAdapter() {
+                        @Override
+                        public void onAnimationEnd(Animator animation) {
+                            content.setVisibility(show ? View.GONE : View.VISIBLE);
+                        }
+                    });
+
+        }
+        if(mySwipeRefreshLayout != null & !show) {
+            mySwipeRefreshLayout.setRefreshing(show);
+        }
+    }
+    private void showEmpty(boolean show) {
+        if(getActivity() != null) {
+            View v = getActivity().findViewById(R.id.empty_badges);
+            if (v != null) {
+                v.setVisibility(show ? View.VISIBLE : View.GONE);
+            }
+        }
+    }
 
 }

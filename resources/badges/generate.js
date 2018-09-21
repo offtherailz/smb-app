@@ -6,42 +6,43 @@ const NAMES = [
     // user
     "new_user",
     // data_collection
-    "data_collector_level0",
-    "data_collector_level1",
-    "data_collector_level2",
-    "data_collector_level3",
+    "data_collector_level0", // data_collection
+    "data_collector_level1", // data_collection
+    "data_collector_level2", // data_collection
+    "data_collector_level3", // data_collection
 
-    // bike_usage
-    "biker_level1",
-    "biker_level2",
-    "biker_level3",
-    "bike_surfer_level1",
-    "bike_surfer_level2",
-    "bike_surfer_level3",
+    "biker_level1", // bike_usage
+    "biker_level2", // bike_usage
+    "biker_level3", // bike_usage
 
-    // public_transport_usage
-    "public_mobility_level1",
-    "public_mobility_level2",
-    "public_mobility_level3",
-    "tpl_surfer_level1",
-    "tpl_surfer_level2",
-    "tpl_surfer_level3",
+    "public_mobility_level1", // public_transport_usage
+    "public_mobility_level2", // public_transport_usage
+    "public_mobility_level3", // public_transport_usage
 
-    // sustainability
-    "multi_surfer_level1",
-    "multi_surfer_level2",
-    "multi_surfer_level3",
-    "ecologist_level1",
-    "ecologist_level2",
-    "ecologist_level3",
-    "healthy_level1",
-    "healthy_level2",
-    "healthy_level3",
+    "bike_surfer_level1", // bike_usage
+    "bike_surfer_level2", // bike_usage
+    "bike_surfer_level3", // bike_usage
+
+    "tpl_surfer_level1", // public_transport_usage
+    "tpl_surfer_level2", // public_transport_usage
+    "tpl_surfer_level3", // public_transport_usage
+
+    "multi_surfer_level1", // sustainability
+    "multi_surfer_level2", // sustainability
+    "multi_surfer_level3", // sustainability
+
+    "ecologist_level1", // sustainability
+    "ecologist_level2", // sustainability
+    "ecologist_level3", // sustainability
+
+    "healthy_level1", // sustainability
+    "healthy_level2", // sustainability
+    "healthy_level3", // sustainability
 
     // cost_savings
-    "money_saver_level1",
-    "money_saver_level2",
-    "money_saver_level3"
+    "money_saver_level1", // cost_savings
+    "money_saver_level2", // cost_savings
+    "money_saver_level3" // cost_savings
 ];
 
 

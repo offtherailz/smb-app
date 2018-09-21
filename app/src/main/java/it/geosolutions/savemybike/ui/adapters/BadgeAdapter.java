@@ -13,7 +13,6 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.util.HashMap;
@@ -24,9 +23,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import it.geosolutions.savemybike.R;
 import it.geosolutions.savemybike.model.Badge;
-import it.geosolutions.savemybike.model.TrackItem;
-import it.geosolutions.savemybike.ui.VehicleUtils;
-import it.geosolutions.savemybike.ui.activity.TrackDetailsActivity;
 
 /**
  * adapter for Badges

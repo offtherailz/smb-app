@@ -52,6 +52,25 @@ public class Badge {
     }
 
     public String getName() {
+        /*
+            Badge name can not start with a number. If it is the case
+            the name is a sorting index that must be removed.
+            This is required because the back-end framework (django gameify),
+            don't allow to add anything to the model, and in order to sort
+            badges, we need to put the order index inside the name.
+            All the resources refer to names without order, so we have to remove this part
+            before to return the badge name
+         */
+        String[] parts = name.split("_");
+        if(parts[0] != null) {
+            try {
+                int order = Integer.parseInt(parts[0]);
+                return name.replaceFirst(parts[0] + "_", "");
+            } catch (Exception e) {
+                return name;
+            }
+
+        }
         return name;
     }
 
