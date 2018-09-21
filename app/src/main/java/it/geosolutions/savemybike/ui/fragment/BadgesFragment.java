@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -17,10 +18,14 @@ import it.geosolutions.savemybike.R;
 import it.geosolutions.savemybike.data.Constants;
 import it.geosolutions.savemybike.data.server.RetrofitClient;
 import it.geosolutions.savemybike.data.server.SMBRemoteServices;
+import it.geosolutions.savemybike.model.Badge;
 import it.geosolutions.savemybike.model.Bike;
 import it.geosolutions.savemybike.model.CurrentStatus;
+import it.geosolutions.savemybike.model.PaginatedResult;
+import it.geosolutions.savemybike.model.TrackItem;
 import it.geosolutions.savemybike.ui.BikeAdapter;
 import it.geosolutions.savemybike.ui.activity.SaveMyBikeActivity;
+import it.geosolutions.savemybike.ui.adapters.BadgeAdapter;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -36,23 +41,54 @@ public class BadgesFragment extends Fragment {
     public static final String TAG = "BIKELIST";
     @BindView(R.id.bikes_list) ListView listView;
 
-    BikeAdapter bikeAdapter;
+    BadgeAdapter badgeAdapter;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
 
-        final View view = inflater.inflate(R.layout.fragment_bikes, container, false);
+        final View view = inflater.inflate(R.layout.fragment_badges, container, false);
         ButterKnife.bind(this, view);
         SaveMyBikeActivity activity = ((SaveMyBikeActivity)getActivity());
 
         // setup adapter
-        List<Bike> bikes = activity.getConfiguration().getBikes(activity);
-        bikeAdapter = new BikeAdapter(activity, R.layout.item_bike, activity.getConfiguration().getBikes(activity));
-        listView.setAdapter(bikeAdapter);
+        ArrayList badges = new ArrayList<Badge>();
+
+        badges.add(new Badge("new_user"));
+        badges.add(new Badge("data_collector_level0"));
+        badges.add(new Badge("data_collector_level1"));
+        badges.add(new Badge("data_collector_level2"));
+        badges.add(new Badge("data_collector_level3"));
+        badges.add(new Badge("biker_level1"));
+        badges.add(new Badge("biker_level2"));
+        badges.add(new Badge("biker_level3"));
+        badges.add(new Badge("bike_surfer_level1"));
+        badges.add(new Badge("bike_surfer_level2"));
+        badges.add(new Badge("bike_surfer_level3"));
+        badges.add(new Badge("public_mobility_level1"));
+        badges.add(new Badge("public_mobility_level2"));
+        badges.add(new Badge("public_mobility_level3"));
+        badges.add(new Badge("tpl_surfer_level1"));
+        badges.add(new Badge("tpl_surfer_level2"));
+        badges.add(new Badge("tpl_surfer_level3"));
+        badges.add(new Badge("multi_surfer_level1"));
+        badges.add(new Badge("multi_surfer_level2"));
+        badges.add(new Badge("multi_surfer_level3"));
+        badges.add(new Badge("ecologist_level1"));
+        badges.add(new Badge("ecologist_level2"));
+        badges.add(new Badge("ecologist_level3"));
+        badges.add(new Badge("healthy_level1"));
+        badges.add(new Badge("healthy_level2"));
+        badges.add(new Badge("healthy_level3"));
+        badges.add(new Badge("money_saver_level1"));
+        badges.add(new Badge("money_saver_level2"));
+        badges.add(new Badge("money_saver_level3"));
+
+        badgeAdapter = new BadgeAdapter(activity, R.layout.item_badge, badges);
+        listView.setAdapter(badgeAdapter);
 
         // set up empty view
-        View empty = view.findViewById(R.id.empty_bikes);
-        if(empty != null && bikes != null && bikes.size() > 0) {
+        View empty = view.findViewById(R.id.empty_badges);
+        if(empty != null && badges != null && badges.size() > 0) {
             empty.setVisibility(View.GONE);
         } else {
             empty.setVisibility(View.VISIBLE);
@@ -60,53 +96,36 @@ public class BadgesFragment extends Fragment {
         return view;
     }
 
-    /* TODO: allow to add bikes
-    @OnClick(R.id.add_bike_button)
-    public void onClick() {
-
-        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(Constants.PORTAL_ENDPOINT + "/bikes"));
-        startActivity(browserIntent);
-
-        // Toast.makeText(getActivity(), "Todo : add another bike", Toast.LENGTH_SHORT).show();
-    }
-    */
     /**
-     * Call the API to update a bike's status
+     * loads the locally available sessions from the database and invalidates the UI
      */
-    public void updateBikeStatus(Bike bike, String details) {
-
-        if(details == null){
-            details = "";
-        }
-
-        RetrofitClient rclient = RetrofitClient.getInstance(getActivity());
-        SMBRemoteServices smbserv = rclient.getPortalServices();
-
-        CurrentStatus newStatus = new CurrentStatus();
-        newStatus.setBike(Constants.PORTAL_ENDPOINT + "api/bikes/"+bike.getShort_uuid()+"/");
-        newStatus.setDetails(details);
-        newStatus.setLost(!bike.getCurrentStatus().getLost());
-        Call<Object> call = smbserv.sendNewBikeStatus(newStatus);
-
-        call.enqueue(new Callback<Object>() {
+    /*
+    private void getBadges() {
+        RetrofitClient client = RetrofitClient.getInstance(this.getContext());
+        SMBRemoteServices portalServices = client.getPortalServices();
+        portalServices.getBadges().enqueue(new Callback<PaginatedResult<Badge>>() {
             @Override
-            public void onResponse(Call<Object> call, Response<Object> response) {
-                Log.i(TAG, "Response Message: "+ response.message());
-                Log.i(TAG, "Response Body: "+ response.body());
-
-                if(response.isSuccessful()) {
-                    bike.getCurrentStatus().setLost(!bike.getCurrentStatus().getLost());
-                    bikeAdapter.notifyDataSetInvalidated();
+            public void onResponse(Call<PaginatedResult<Badge>> call, Response<PaginatedResult<Badge>> response) {
+                showProgress(false);
+                PaginatedResult<TrackItem> result = response.body();
+                if(result != null && result.getResults() != null) {
+                    adapter.clear();
+                    adapter.addAll(response.body().getResults());
+                    showEmpty(response.body().getResults().size() == 0);
                 } else {
-                    Log.w(TAG, "Bike update UNSUCCESSFUL");
+                    adapter.clear();
+                    adapter.addAll(new ArrayList<>());
+                    showEmpty(true);
                 }
+                adapter.notifyDataSetChanged();
             }
 
             @Override
-            public void onFailure(Call<Object> call, Throwable t) {
-                Log.e(TAG, "ERROR: "+ t.getMessage());
+            public void onFailure(Call<PaginatedResult<TrackItem>> call, Throwable t) {
+                showProgress(false);
+                showEmpty(true);
             }
         });
-    }
+    }*/
 
 }
