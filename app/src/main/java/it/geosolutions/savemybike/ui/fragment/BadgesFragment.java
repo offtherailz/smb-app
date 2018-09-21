@@ -61,12 +61,12 @@ public class BadgesFragment extends Fragment {
         badges.add(new Badge("biker_level1"));
         badges.add(new Badge("biker_level2"));
         badges.add(new Badge("biker_level3"));
-        badges.add(new Badge("bike_surfer_level1"));
-        badges.add(new Badge("bike_surfer_level2"));
-        badges.add(new Badge("bike_surfer_level3"));
         badges.add(new Badge("public_mobility_level1"));
         badges.add(new Badge("public_mobility_level2"));
         badges.add(new Badge("public_mobility_level3"));
+        badges.add(new Badge("bike_surfer_level1"));
+        badges.add(new Badge("bike_surfer_level2"));
+        badges.add(new Badge("bike_surfer_level3"));
         badges.add(new Badge("tpl_surfer_level1"));
         badges.add(new Badge("tpl_surfer_level2"));
         badges.add(new Badge("tpl_surfer_level3"));
@@ -82,7 +82,6 @@ public class BadgesFragment extends Fragment {
         badges.add(new Badge("money_saver_level1"));
         badges.add(new Badge("money_saver_level2"));
         badges.add(new Badge("money_saver_level3"));
-
         badgeAdapter = new BadgeAdapter(activity, R.layout.item_badge, badges);
         listView.setAdapter(badgeAdapter);
 

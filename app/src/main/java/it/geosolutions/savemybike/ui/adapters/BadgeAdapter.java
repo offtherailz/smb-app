@@ -1,6 +1,10 @@
 package it.geosolutions.savemybike.ui.adapters;
 
 import android.content.Context;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.GradientDrawable;
+import android.graphics.drawable.ShapeDrawable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -21,6 +25,7 @@ import butterknife.ButterKnife;
 import it.geosolutions.savemybike.R;
 import it.geosolutions.savemybike.model.Badge;
 import it.geosolutions.savemybike.model.TrackItem;
+import it.geosolutions.savemybike.ui.VehicleUtils;
 import it.geosolutions.savemybike.ui.activity.TrackDetailsActivity;
 
 /**
@@ -34,6 +39,7 @@ public class BadgeAdapter extends ArrayAdapter<Badge> {
         @BindView(R.id.title) TextView title;
         @BindView(R.id.description) TextView description;
         @BindView(R.id.badge_icon) ImageView icon;
+        @BindView(R.id.icon_background) View iconBackground;
         @BindView(R.id.level) LinearLayout level;
         public ViewHolder(View view) {
             ButterKnife.bind(this, view);
@@ -53,12 +59,12 @@ public class BadgeAdapter extends ArrayAdapter<Badge> {
         NAME_TITLE_MAP.put("biker_level1", R.string.badge_title_biker_level1);
         NAME_TITLE_MAP.put("biker_level2", R.string.badge_title_biker_level2);
         NAME_TITLE_MAP.put("biker_level3", R.string.badge_title_biker_level3);
-        NAME_TITLE_MAP.put("bike_surfer_level1", R.string.badge_title_bike_surfer_level1);
-        NAME_TITLE_MAP.put("bike_surfer_level2", R.string.badge_title_bike_surfer_level2);
-        NAME_TITLE_MAP.put("bike_surfer_level3", R.string.badge_title_bike_surfer_level3);
         NAME_TITLE_MAP.put("public_mobility_level1", R.string.badge_title_public_mobility_level1);
         NAME_TITLE_MAP.put("public_mobility_level2", R.string.badge_title_public_mobility_level2);
         NAME_TITLE_MAP.put("public_mobility_level3", R.string.badge_title_public_mobility_level3);
+        NAME_TITLE_MAP.put("bike_surfer_level1", R.string.badge_title_bike_surfer_level1);
+        NAME_TITLE_MAP.put("bike_surfer_level2", R.string.badge_title_bike_surfer_level2);
+        NAME_TITLE_MAP.put("bike_surfer_level3", R.string.badge_title_bike_surfer_level3);
         NAME_TITLE_MAP.put("tpl_surfer_level1", R.string.badge_title_tpl_surfer_level1);
         NAME_TITLE_MAP.put("tpl_surfer_level2", R.string.badge_title_tpl_surfer_level2);
         NAME_TITLE_MAP.put("tpl_surfer_level3", R.string.badge_title_tpl_surfer_level3);
@@ -91,12 +97,12 @@ public class BadgeAdapter extends ArrayAdapter<Badge> {
         NAME_BEFORE_MAP.put("biker_level1", R.string.badge_before_biker_level1);
         NAME_BEFORE_MAP.put("biker_level2", R.string.badge_before_biker_level2);
         NAME_BEFORE_MAP.put("biker_level3", R.string.badge_before_biker_level3);
-        NAME_BEFORE_MAP.put("bike_surfer_level1", R.string.badge_before_bike_surfer_level1);
-        NAME_BEFORE_MAP.put("bike_surfer_level2", R.string.badge_before_bike_surfer_level2);
-        NAME_BEFORE_MAP.put("bike_surfer_level3", R.string.badge_before_bike_surfer_level3);
         NAME_BEFORE_MAP.put("public_mobility_level1", R.string.badge_before_public_mobility_level1);
         NAME_BEFORE_MAP.put("public_mobility_level2", R.string.badge_before_public_mobility_level2);
         NAME_BEFORE_MAP.put("public_mobility_level3", R.string.badge_before_public_mobility_level3);
+        NAME_BEFORE_MAP.put("bike_surfer_level1", R.string.badge_before_bike_surfer_level1);
+        NAME_BEFORE_MAP.put("bike_surfer_level2", R.string.badge_before_bike_surfer_level2);
+        NAME_BEFORE_MAP.put("bike_surfer_level3", R.string.badge_before_bike_surfer_level3);
         NAME_BEFORE_MAP.put("tpl_surfer_level1", R.string.badge_before_tpl_surfer_level1);
         NAME_BEFORE_MAP.put("tpl_surfer_level2", R.string.badge_before_tpl_surfer_level2);
         NAME_BEFORE_MAP.put("tpl_surfer_level3", R.string.badge_before_tpl_surfer_level3);
@@ -127,12 +133,12 @@ public class BadgeAdapter extends ArrayAdapter<Badge> {
         NAME_AFTER_MAP.put("biker_level1", R.string.badge_after_biker_level1);
         NAME_AFTER_MAP.put("biker_level2", R.string.badge_after_biker_level2);
         NAME_AFTER_MAP.put("biker_level3", R.string.badge_after_biker_level3);
-        NAME_AFTER_MAP.put("bike_surfer_level1", R.string.badge_after_bike_surfer_level1);
-        NAME_AFTER_MAP.put("bike_surfer_level2", R.string.badge_after_bike_surfer_level2);
-        NAME_AFTER_MAP.put("bike_surfer_level3", R.string.badge_after_bike_surfer_level3);
         NAME_AFTER_MAP.put("public_mobility_level1", R.string.badge_after_public_mobility_level1);
         NAME_AFTER_MAP.put("public_mobility_level2", R.string.badge_after_public_mobility_level2);
         NAME_AFTER_MAP.put("public_mobility_level3", R.string.badge_after_public_mobility_level3);
+        NAME_AFTER_MAP.put("bike_surfer_level1", R.string.badge_after_bike_surfer_level1);
+        NAME_AFTER_MAP.put("bike_surfer_level2", R.string.badge_after_bike_surfer_level2);
+        NAME_AFTER_MAP.put("bike_surfer_level3", R.string.badge_after_bike_surfer_level3);
         NAME_AFTER_MAP.put("tpl_surfer_level1", R.string.badge_after_tpl_surfer_level1);
         NAME_AFTER_MAP.put("tpl_surfer_level2", R.string.badge_after_tpl_surfer_level2);
         NAME_AFTER_MAP.put("tpl_surfer_level3", R.string.badge_after_tpl_surfer_level3);
@@ -147,26 +153,27 @@ public class BadgeAdapter extends ArrayAdapter<Badge> {
         NAME_AFTER_MAP.put("healthy_level3", R.string.badge_after_healthy_level3);
         NAME_AFTER_MAP.put("money_saver_level1", R.string.badge_after_money_saver_level1);
         NAME_AFTER_MAP.put("money_saver_level2", R.string.badge_after_money_saver_level2);
+        NAME_AFTER_MAP.put("money_saver_level3", R.string.badge_after_money_saver_level3);
     }
 
     private static final Map<String, Integer> NAME_ICON_MAP;
     static {
+        // Icons
         NAME_ICON_MAP = new HashMap<String, Integer>();
         NAME_ICON_MAP.put("new_user", R.drawable.badge_ic_new_user);
         NAME_ICON_MAP.put("data_collector_level0", R.drawable.badge_ic_data_collector_level0);
         NAME_ICON_MAP.put("data_collector_level1", R.drawable.badge_ic_data_collector_level1);
         NAME_ICON_MAP.put("data_collector_level2", R.drawable.badge_ic_data_collector_level2);
         NAME_ICON_MAP.put("data_collector_level3", R.drawable.badge_ic_data_collector_level3);
-
         NAME_ICON_MAP.put("biker_level1", R.drawable.badge_ic_biker_level1);
         NAME_ICON_MAP.put("biker_level2", R.drawable.badge_ic_biker_level2);
         NAME_ICON_MAP.put("biker_level3", R.drawable.badge_ic_biker_level3);
-        NAME_ICON_MAP.put("bike_surfer_level1", R.drawable.badge_ic_bike_surfer_level1);
-        NAME_ICON_MAP.put("bike_surfer_level2", R.drawable.badge_ic_bike_surfer_level2);
-        NAME_ICON_MAP.put("bike_surfer_level3", R.drawable.badge_ic_bike_surfer_level3);
         NAME_ICON_MAP.put("public_mobility_level1", R.drawable.badge_ic_public_mobility_level1);
         NAME_ICON_MAP.put("public_mobility_level2", R.drawable.badge_ic_public_mobility_level2);
         NAME_ICON_MAP.put("public_mobility_level3", R.drawable.badge_ic_public_mobility_level3);
+        NAME_ICON_MAP.put("bike_surfer_level1", R.drawable.badge_ic_bike_surfer_level1);
+        NAME_ICON_MAP.put("bike_surfer_level2", R.drawable.badge_ic_bike_surfer_level2);
+        NAME_ICON_MAP.put("bike_surfer_level3", R.drawable.badge_ic_bike_surfer_level3);
         NAME_ICON_MAP.put("tpl_surfer_level1", R.drawable.badge_ic_tpl_surfer_level1);
         NAME_ICON_MAP.put("tpl_surfer_level2", R.drawable.badge_ic_tpl_surfer_level2);
         NAME_ICON_MAP.put("tpl_surfer_level3", R.drawable.badge_ic_tpl_surfer_level3);
@@ -207,10 +214,22 @@ public class BadgeAdapter extends ArrayAdapter<Badge> {
         Badge badge = getItem(position);
         // setup view
         if(badge != null) {
-            view.setAlpha(badge.isAcquired() ? 1.0f : 0.5f);
+
             holder.title.setText(getTitle(badge));
             holder.description.setText(getDescription(badge));
             holder.icon.setImageResource(getIcon(badge));
+            Drawable background = holder.iconBackground.getBackground();
+            background.mutate();
+            // set acquired or not acquired style
+            view.setAlpha(badge.isAcquired() ? 1.0f : 0.5f);
+            if (background instanceof ShapeDrawable) {
+                ((ShapeDrawable)background).getPaint().setColor(getColor(badge));
+            } else if (background instanceof GradientDrawable) {
+                ((GradientDrawable)background).setColor(getColor(badge));
+            } else if (background instanceof ColorDrawable) {
+                ((ColorDrawable)background).setColor(getColor(badge));
+            }
+
         }
 
         return view;
@@ -233,6 +252,9 @@ public class BadgeAdapter extends ArrayAdapter<Badge> {
         } else {
             return R.drawable.ic_badge;
         }
+    }
+    private int getColor(Badge badge) {
+        return getContext().getResources().getColor( badge.isAcquired() ? R.color.badge_background : R.color.badge_not_acquired);
     }
     private String getDescription(Badge badge) {
         Integer id;
