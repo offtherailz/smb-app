@@ -234,10 +234,11 @@ public class SaveMyBikeActivity extends SMBBaseActivity implements OnFragmentInt
             setupUserView(user);
         }
         updateUser();
-        navView.getHeaderView(0).findViewById(R.id.userName).setOnClickListener((view) -> {
+        navView.getHeaderView(0).setOnClickListener((view) -> {
             changeFragment(R.id.navigation_user_profile);
             drawerLayout.closeDrawer(GravityCompat.START);
         });
+
         navView.setNavigationItemSelectedListener((MenuItem menuItem) -> {
                 Fragment f = null;
                 changeFragment(menuItem.getItemId());
