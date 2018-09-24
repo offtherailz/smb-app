@@ -57,10 +57,9 @@ public class BadgesFragment extends Fragment {
         final View view = inflater.inflate(R.layout.fragment_badges, container, false);
         ButterKnife.bind(this, view);
         SaveMyBikeActivity activity = ((SaveMyBikeActivity)getActivity());
-
+        showEmpty(false);
         // setup adapter
         ArrayList badges = new ArrayList<Badge>();
-
 
         adapter = new BadgeAdapter(activity, R.layout.item_badge, badges);
         listView.setAdapter(adapter);
@@ -75,6 +74,8 @@ public class BadgesFragment extends Fragment {
     private void getBadges() {
         RetrofitClient client = RetrofitClient.getInstance(this.getContext());
         SMBRemoteServices portalServices = client.getPortalServices();
+
+        showProgress(true);
         portalServices.getBadges().enqueue(new Callback<PaginatedResult<Badge>>() {
             @Override
             public void onResponse(Call<PaginatedResult<Badge>> call, Response<PaginatedResult<Badge>> response) {

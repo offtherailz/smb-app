@@ -293,7 +293,7 @@ public class SaveMyBikeActivity extends SMBBaseActivity implements OnFragmentInt
         TextView email = header.findViewById(R.id.userEmail);
         ImageView avatar = header.findViewById(R.id.userAvatar);
         GlideApp.with(this)
-            .load("https://www.gravatar.com/avatar/" + md5(user.getUsername() )+ "/?s=120&f=y")
+            .load(Constants.PORTAL_ENDPOINT + user.getAvatar())
             .override(120, 120)
             .fitCenter() // scale to fit entire image within ImageView
             .apply(RequestOptions.circleCropTransform())
