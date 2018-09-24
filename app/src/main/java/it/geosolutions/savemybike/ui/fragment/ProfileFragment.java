@@ -8,8 +8,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import com.bumptech.glide.request.RequestOptions;
 
 import java.util.List;
 
@@ -17,6 +20,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.OnTextChanged;
+import it.geosolutions.savemybike.GlideApp;
 import it.geosolutions.savemybike.R;
 import it.geosolutions.savemybike.data.Constants;
 import it.geosolutions.savemybike.data.server.RetrofitClient;
@@ -45,6 +49,7 @@ public class ProfileFragment extends Fragment {
     @BindView(R.id.last_name) TextView lastName;
     @BindView(R.id.bio) TextView bio;
     @BindView(R.id.phone_number) TextView phoneNumber;
+    @BindView(R.id.userAvatar) ImageView avatar;
     // @BindView(R.id.btn_send) Button send;
 
     @Nullable
@@ -61,6 +66,12 @@ public class ProfileFragment extends Fragment {
             phoneNumber.setText(p.getPhoneNumber());
             bio.setText(p.getBio());
         }
+        GlideApp.with(this)
+                .load(Constants.PORTAL_ENDPOINT + user.getAvatar())
+                .override(250, 250)
+                .fitCenter() // scale to fit entire image within ImageView
+                .apply(RequestOptions.circleCropTransform())
+                .into(avatar);
         return view;
     }
     protected void setModified(boolean modified) {

@@ -298,7 +298,7 @@ public class SaveMyBikeActivity extends SMBBaseActivity implements OnFragmentInt
             .fitCenter() // scale to fit entire image within ImageView
             .apply(RequestOptions.circleCropTransform())
             .into(avatar);
-        // avatar.setVisibility(View.GONE); // TODO Avatar
+
         if(user != null) {
 
             if(uname != null) {
