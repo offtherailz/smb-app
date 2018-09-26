@@ -164,6 +164,8 @@ public class SaveMyBikeActivity extends SMBBaseActivity implements OnFragmentInt
 
 
         changeFragment(R.id.navigation_record);
+        //load the configuration and select the current vehicle
+        this.currentVehicle = getCurrentVehicleFromConfig();
         loadConfiguration();
         // TODO: Initialize MapView to speedup first activity load.
 
@@ -176,9 +178,8 @@ public class SaveMyBikeActivity extends SMBBaseActivity implements OnFragmentInt
 
     }
 
-    private void loadConfiguration() {
-        //load the configuration and select the current vehicle
-        this.currentVehicle = getCurrentVehicleFromConfig();
+    public void loadConfiguration() {
+
         //when online, update the config from remote
         if (Util.isOnline(getBaseContext())) {
 
@@ -527,7 +528,6 @@ public class SaveMyBikeActivity extends SMBBaseActivity implements OnFragmentInt
                 fragment = new BikeListFragment();
                 break;
 
-
             default:
                 break;
         }
@@ -536,7 +536,11 @@ public class SaveMyBikeActivity extends SMBBaseActivity implements OnFragmentInt
         }
 
     }
-
+    public void changeFragment(Fragment fragment) {
+        if(fragment != null) {
+            getSupportFragmentManager().beginTransaction().replace(R.id.main_content_frame, fragment).commit();
+        }
+    }
     /**
      * changes the current vehicle in the configuration and updates the UI if the record fragment is currently visible
      *
