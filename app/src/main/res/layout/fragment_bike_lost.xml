@@ -23,7 +23,6 @@
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
-
         android:layout_height="0dp"
         app:layout_constraintBottom_toTopOf="@+id/constraintLayout"
         app:layout_constraintEnd_toEndOf="parent"
@@ -103,6 +102,6 @@
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/ic_send" />
     </android.support.constraint.ConstraintLayout>
-
+    <include layout="@layout/loading_container" android:id="@+id/bike_status_loading" />
 
 </android.support.constraint.ConstraintLayout>

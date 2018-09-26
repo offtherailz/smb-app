@@ -67,6 +67,7 @@ import it.geosolutions.savemybike.model.PaginatedResult;
 import it.geosolutions.savemybike.model.Session;
 import it.geosolutions.savemybike.model.Vehicle;
 import it.geosolutions.savemybike.model.user.User;
+import it.geosolutions.savemybike.ui.callback.IOnBackPressed;
 import it.geosolutions.savemybike.ui.callback.OnFragmentInteractionListener;
 import it.geosolutions.savemybike.ui.callback.RecordingEventListener;
 import it.geosolutions.savemybike.ui.fragment.ActivitiesFragment;
@@ -825,6 +826,12 @@ public class SaveMyBikeActivity extends SMBBaseActivity implements OnFragmentInt
 
         drawerLayout.openDrawer(GravityCompat.START);
         return true;
+    }
+    @Override public void onBackPressed() {
+        Fragment fragment = getCurrentFragment();
+        if (!(fragment instanceof IOnBackPressed) || !((IOnBackPressed) fragment).onBackPressed()) {
+            super.onBackPressed();
+        }
     }
 
     @Override

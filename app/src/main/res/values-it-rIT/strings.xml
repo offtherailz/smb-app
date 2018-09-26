@@ -162,7 +162,7 @@
     <!-- ================== -->
     <string name="search_for_location">Cerca un luogo</string>
     <string name="bike_lost_location_hint">Tocca la mappa o cerca un indirizzo per indicare dove hai visto la bici l\'ultima volta</string>
-    <string name="confirm_bike_lost">Confermi che hai perso questa bici?</string>
+    <string name="confirm_bike_lost">Confermi di aver perso questa bici?</string>
     <string name="confirm">Confermo</string>
     <string name="error_saving_bike_status">C\'è stato un errore mentre si tentava di salvare lo stato della bici. Ritentare più tardi</string>
     <string name="confirm_bike_found">Confermi di aver ritrovato questa bici?</string>

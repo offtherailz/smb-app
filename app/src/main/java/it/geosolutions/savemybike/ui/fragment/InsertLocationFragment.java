@@ -1,7 +1,6 @@
 package it.geosolutions.savemybike.ui.fragment;
 
 import android.Manifest;
-import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.location.Address;
@@ -14,38 +13,24 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.AppCompatActivity;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
-import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -53,8 +38,9 @@ import it.geosolutions.savemybike.R;
 import it.geosolutions.savemybike.ui.adapters.AddressAdapter;
 
 /**
- * @author Lorenzo Natali
+ * @author Lorenzo Natali, GeoSolutions S.a.s.
  * This fragment helps to insert a location with GeoCoder, and map
+ * When a position is selected, searching or tapping on the map, callback methods are called
  */
 public class InsertLocationFragment extends Fragment implements OnMapReadyCallback {
     private static final String TAG = InsertLocationFragment.class.getSimpleName();
@@ -63,7 +49,17 @@ public class InsertLocationFragment extends Fragment implements OnMapReadyCallba
      * Callbacks for events coming from this selection fragment
      */
     public interface Callbacks {
+        /**
+         * Called when an address is selected (using GeoCoder)
+         * @param address
+         */
         void onAddressSelected(Address address);
+
+        /**
+         * Called whet a point is selected (using the GeoCoder,
+         * tap on the map or dragging the marker
+         * @param point
+         */
         void onPointSelected(LatLng point);
     }
     Callbacks callbacks;
@@ -91,6 +87,9 @@ public class InsertLocationFragment extends Fragment implements OnMapReadyCallba
         View view = inflater.inflate(R.layout.fragment_insert_location, container, false);
 
         ButterKnife.bind(this, view);
+
+        // Inflate the map fragment programmatically.
+        // This helps to get a not-null reference and, so, register callbacks and call getMapAsync.
         mapFragment = (SupportMapFragment) getChildFragmentManager()
                 .findFragmentById(R.id.insert_location_map_fragment);
 
@@ -110,21 +109,12 @@ public class InsertLocationFragment extends Fragment implements OnMapReadyCallba
     @Override
     public void onMapReady(GoogleMap googleMap) {
         this.googleMap = googleMap;
-        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            googleMap.setMyLocationEnabled(true);
-            LocationManager locationManager = (LocationManager) getContext().getSystemService(Context.LOCATION_SERVICE);
-            Criteria crit = new Criteria();
-            crit.setAccuracy(Criteria.ACCURACY_FINE);
-            crit.setPowerRequirement(Criteria.POWER_LOW);
-            Location location = locationManager.getLastKnownLocation(locationManager.getBestProvider(crit, false));
-            googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), 15));
-            Log.v("MAP_CALLBACK", "setting my location");
-        }else{
-            Log.v("MAP_CALLBACK", "NOT setting my location");
-        }
-        // set proper padding to give space for the search bar
+        setupMapLocation(googleMap);
+        // set proper padding to give space for the GeoCoder
         googleMap.setPadding(0, 170, 0, 0);
         initGeocoder();
+
+        // setup handlers for position picking
         googleMap.setOnMapClickListener(latLng -> {
             setMarkerPosition(latLng);
             if(callbacks != null) {
@@ -150,8 +140,32 @@ public class InsertLocationFragment extends Fragment implements OnMapReadyCallba
         });
     }
 
+    /**
+     * Setup map position and location support.
+     * Zoom to current location, enable location and so on
+     * @param googleMap
+     */
+    private void setupMapLocation(GoogleMap googleMap) {
+        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            Log.v(TAG, "setting my location");
+            googleMap.setMyLocationEnabled(true);
+            LocationManager locationManager = (LocationManager) getContext().getSystemService(Context.LOCATION_SERVICE);
+            Criteria crit = new Criteria();
+            crit.setAccuracy(Criteria.ACCURACY_FINE);
+            crit.setPowerRequirement(Criteria.POWER_LOW);
+            Location location = locationManager.getLastKnownLocation(locationManager.getBestProvider(crit, false));
+            googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), 15));
 
-   public void initGeocoder() {
+        }else{
+            Log.v(TAG, "NOT setting my location");
+        }
+    }
+
+    /**
+     * Initialize GeoCoder input and result list
+     * TODO: we could isolate this component
+     */
+    public void initGeocoder() {
         adapter = new AddressAdapter(getContext(), R.layout.geocoder_result, addressList) {
             @Override
             protected void useItemTextHandler(Address item) {
@@ -189,6 +203,10 @@ public class InsertLocationFragment extends Fragment implements OnMapReadyCallba
        });
    }
 
+    /**
+     * Initializes or updates the marker
+     * @param latLng
+     */
     private void setMarkerPosition(LatLng latLng) {
        if(marker == null) {
            googleMap.animateCamera(CameraUpdateFactory.newLatLng(latLng));
@@ -197,6 +215,10 @@ public class InsertLocationFragment extends Fragment implements OnMapReadyCallba
            marker.setPosition(latLng);
        }
    }
+
+    /**
+     * Retrieves results from the geocoding server and adds them to the result list
+     */
    private void geocode() {
         Log.d(TAG, "geocode");
         String searchString = geocoderSearchInput.getText().toString();
@@ -209,5 +231,7 @@ public class InsertLocationFragment extends Fragment implements OnMapReadyCallba
             Log.e(TAG, "geocode: IOException" + e.getMessage());
         }
    }
+
+
 
 }
