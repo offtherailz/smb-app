@@ -2,6 +2,7 @@ package it.geosolutions.savemybike.ui.activity;
 
 import android.Manifest;
 import android.app.ActivityManager;
+import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
@@ -40,7 +41,11 @@ import com.bumptech.glide.request.target.Target;
 
 import net.openid.appauth.AppAuthConfiguration;
 import net.openid.appauth.AuthState;
+import net.openid.appauth.AuthorizationException;
 import net.openid.appauth.AuthorizationService;
+import net.openid.appauth.AuthorizationServiceDiscovery;
+
+
 
 import java.lang.ref.WeakReference;
 import java.security.MessageDigest;
@@ -56,6 +61,8 @@ import it.geosolutions.savemybike.BuildConfig;
 import it.geosolutions.savemybike.GlideApp;
 import it.geosolutions.savemybike.R;
 import it.geosolutions.savemybike.SMBGlideModule;
+import it.geosolutions.savemybike.auth.LogoutRequest;
+import it.geosolutions.savemybike.auth.LogoutService;
 import it.geosolutions.savemybike.data.Constants;
 import it.geosolutions.savemybike.data.Util;
 import it.geosolutions.savemybike.data.server.RetrofitClient;
@@ -75,6 +82,7 @@ import it.geosolutions.savemybike.ui.fragment.BikeListFragment;
 import it.geosolutions.savemybike.ui.fragment.UserFragment;
 import it.geosolutions.savemybike.ui.tasks.GetRemoteConfigTask;
 import it.geosolutions.savemybike.ui.tasks.CleanUploadedSessionsTask;
+import it.geosolutions.savemybike.ui.utils.AuthUtils;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -136,7 +144,7 @@ public class SaveMyBikeActivity extends SMBBaseActivity implements OnFragmentInt
         if (config.hasConfigurationChanged()) {
             Log.w(TAG, "hasConfigurationChanged() == true");
 
-            signOut();
+            signOut(false);
             return;
         }
 
@@ -611,7 +619,7 @@ public class SaveMyBikeActivity extends SMBBaseActivity implements OnFragmentInt
                 builder.setTitle(R.string.logout_title);
                 builder.setMessage(R.string.logout_message);
                 builder.setPositiveButton(R.string.logout_OK, (dialog, which) -> {
-                    signOut();
+                    signOut(true);
                     dialog.dismiss();
                 });
                 builder.setNegativeButton(R.string.cancel, null);
@@ -788,13 +796,13 @@ public class SaveMyBikeActivity extends SMBBaseActivity implements OnFragmentInt
     }
 
     @MainThread
-    public void signOut() {
+    public void signOut(boolean logout) {
         // discard the authorization and token state, but retain the configuration and
         // dynamic client registration (if applicable), to save from retrieving them again.
         AuthState currentState = mStateManager.getCurrent();
         AuthState clearedState =
                 new AuthState(currentState.getAuthorizationServiceConfiguration());
-        if (currentState.getLastRegistrationResponse() != null) {
+        if (!logout && currentState.getLastRegistrationResponse() != null) {
             clearedState.update(currentState.getLastRegistrationResponse());
         }
         mStateManager.replace(clearedState);
@@ -804,7 +812,35 @@ public class SaveMyBikeActivity extends SMBBaseActivity implements OnFragmentInt
         startActivity(mainIntent);
         finish();
     }
-
+    private void logout() {
+        AuthState mAuthState = mStateManager.getCurrent();
+        if (mAuthState.getAuthorizationServiceConfiguration() == null) {
+            Log.e(TAG, "Cannot make userInfo request without service configuration");
+        }
+        mAuthState.performActionWithFreshTokens(mAuthService, new AuthState.AuthStateAction() {
+            @Override
+            public void execute(String accessToken, String idToken, AuthorizationException ex) {
+                if (ex != null) {
+                    Log.e(TAG, "Token refresh failed when fetching user info");
+                    return;
+                }
+                AuthorizationServiceDiscovery discoveryDoc = mAuthState.getAuthorizationServiceConfiguration().discoveryDoc;
+                if (discoveryDoc == null) {
+                    throw new IllegalStateException("no available discovery doc");
+                }
+                Uri endSessionEndpoint = AuthUtils.getEndSessionEndpoint(discoveryDoc);
+                // String logoutUri = getResources().getString(R.string.keycloak_auth_logout_uri);
+                LogoutRequest logoutRequest = new LogoutRequest(endSessionEndpoint, null);
+                LogoutService logoutService = new LogoutService(SaveMyBikeActivity.this);
+                logoutService.performLogoutRequest(
+                        logoutRequest,
+                        PendingIntent.getActivity(
+                                SaveMyBikeActivity.this, logoutRequest.hashCode(),
+                                new Intent(SaveMyBikeActivity.this, LoginActivity.class), 0)
+                );
+            }
+        });
+    }
     @Override
     protected void onDestroy() {
         super.onDestroy();

@@ -503,6 +503,7 @@ public final class LoginActivity extends AppCompatActivity {
                     mAuthIntent.get());
             startActivityForResult(intent, RC_AUTH);
         }
+        mAuthService.getCustomTabManager()
     }
 
     private void recreateAuthorizationService() {

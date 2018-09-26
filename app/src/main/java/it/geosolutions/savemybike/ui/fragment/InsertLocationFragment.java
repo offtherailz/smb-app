@@ -201,6 +201,7 @@ public class InsertLocationFragment extends Fragment implements OnMapReadyCallba
            }
            return false;
        });
+
    }
 
     /**
