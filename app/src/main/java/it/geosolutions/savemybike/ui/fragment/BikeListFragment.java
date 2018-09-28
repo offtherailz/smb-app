@@ -1,21 +1,25 @@
 package it.geosolutions.savemybike.ui.fragment;
 
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import it.geosolutions.savemybike.BuildConfig;
 import it.geosolutions.savemybike.Configuration;
 import it.geosolutions.savemybike.R;
 import it.geosolutions.savemybike.data.Constants;
@@ -23,8 +27,10 @@ import it.geosolutions.savemybike.data.server.RetrofitClient;
 import it.geosolutions.savemybike.data.server.SMBRemoteServices;
 import it.geosolutions.savemybike.model.Bike;
 import it.geosolutions.savemybike.model.CurrentStatus;
+import it.geosolutions.savemybike.model.PaginatedResult;
 import it.geosolutions.savemybike.ui.BikeAdapter;
 import it.geosolutions.savemybike.ui.activity.SaveMyBikeActivity;
+import it.geosolutions.savemybike.ui.tasks.GetRemoteConfigTask;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -39,7 +45,7 @@ import retrofit2.Response;
 public class BikeListFragment extends Fragment {
     public static final String TAG = "BIKELIST";
     @BindView(R.id.bikes_list) ListView listView;
-
+    @BindView(R.id.swiperefresh) SwipeRefreshLayout refreshLayout;
     BikeAdapter bikeAdapter;
     @Nullable
     @Override
@@ -57,6 +63,7 @@ public class BikeListFragment extends Fragment {
                 updateBikeStatus(bike, details);
             }
         };
+        refreshLayout.setOnRefreshListener(() -> getBikes());
         listView.setAdapter(bikeAdapter);
 
         // set up empty view
@@ -116,6 +123,48 @@ public class BikeListFragment extends Fragment {
                 Log.e(TAG, "ERROR: "+ t.getMessage());
             }
         });
+    }
+    public void getBikes() {
+        Context context = getContext();
+        showLoading(true);
+        new GetRemoteConfigTask(context,  null, new RetrofitClient.GetBikesCallback() {
+            @Override
+            public void gotBikes(final PaginatedResult<Bike> bikesList) {
+                if (bikesList != null){
+                    showLoading(false);
+                    if (bikesList.getResults() != null) {
+
+                        if (BuildConfig.DEBUG) {
+                            Log.i(TAG, "Number of downloaded bikes: " + bikesList.getResults().size());
+                        }
+
+                        //save the config
+                        it.geosolutions.savemybike.model.Configuration.saveBikes(context, bikesList.getResults());
+
+
+                    } else {
+                        Log.w(TAG, "Wrong bikes response: server did not return a results array");
+                        // Removing the bikes list
+                        it.geosolutions.savemybike.model.Configuration.saveBikes(context, new ArrayList<>());
+                    }
+
+                } else {
+                    Log.e(TAG, "Wrong bikes response: check for authentication or network errors");
+                    // Removing the bikes list
+                    it.geosolutions.savemybike.model.Configuration.saveBikes(context, new ArrayLis  t<>());
+                }
+            }
+
+            @Override
+            public void error(String message) {
+                Log.e(TAG, "error downloading bikes: " + message);
+                showLoading(false);
+            }
+        }).execute();
+    }
+    @BindView(R.id.progress_layout) View loading;
+    public void showLoading(boolean show) {
+        loading.setVisibility(show ? View.VISIBLE : View.GONE);
     }
 
 }
