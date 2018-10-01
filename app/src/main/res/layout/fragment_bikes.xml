@@ -7,20 +7,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
     <include layout="@layout/empty_bikes" android:id="@+id/empty_bikes"/>
-    <LinearLayout
-        android:id="@+id/progress_layout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center_horizontal|center_vertical"
-        android:orientation="vertical"
-        android:visibility="gone"
-        >
-
-        <ProgressBar
-            style="?android:attr/progressBarStyleLarge"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-    </LinearLayout>
+    <include layout="@layout/loading_container" android:id="@+id/bike_status_loading" />
 
     <android.support.v4.widget.SwipeRefreshLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
