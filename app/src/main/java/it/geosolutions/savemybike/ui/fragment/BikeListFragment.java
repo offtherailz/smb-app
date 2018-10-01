@@ -166,6 +166,13 @@ public class BikeListFragment extends Fragment {
         }).execute();
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        refreshLayout.setRefreshing(true);
+        getBikes();
+    }
+
     public void showLoading(boolean show) {
         refreshLayout.setRefreshing(show);
         // loading.setVisibility(show ? View.VISIBLE : View.GONE);
