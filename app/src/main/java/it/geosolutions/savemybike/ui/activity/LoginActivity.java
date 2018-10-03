@@ -213,7 +213,7 @@ public final class LoginActivity extends AppCompatActivity {
             } else if (ex != null) {
                 displayNotAuthorized("Authorization flow failed: " + ex.getMessage());
             } else {
-                displayNotAuthorized("No authorization state retained - reauthorization required");
+                displayNotAuthorized("No authorization state retained - re-authorization required");
             }
         }
     }
@@ -262,9 +262,10 @@ public final class LoginActivity extends AppCompatActivity {
                 if(localUser == null // first login
                     || localUser.getAcceptedTermsOfService() == null // old users that didn't have the profile autocomplete but did login
                     || localUser.getAcceptedTermsOfService() == false // terms of service unchecked.
-                    || state.getClientSecret() != localUser.getUsername() // changed login  TODO: find out correct condition
+                    //  TODO: find out check if different credentials are used
                         ) {
-                    //TODO: retrieve user info and prompt profile completition.
+                    displayLoading(/*getResources().getString(R.string.checking_user_data)*/ "Checking user data");
+                    //TODO: retrieve user info and prompt profile completion.
                     // TODO: the following block have to be moved after async check to display CompleteProfile wizard
                     final Context context = this;
                     RetrofitClient.getInstance(this).getPortalServices().getUser().enqueue(new Callback<User>() {
@@ -290,7 +291,7 @@ public final class LoginActivity extends AppCompatActivity {
 
                         @Override
                         public void onFailure(Call<User> call, Throwable t) {
-                            // TODO: handle network issues
+                            displayNotAuthorized(getResources().getString(R.string.could_not_verify_user));
                         }
                     });
 

@@ -1,8 +1,11 @@
 package it.geosolutions.savemybike.ui.activity;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Build;
 import android.support.annotation.NonNull;
@@ -20,7 +23,6 @@ import it.geosolutions.savemybike.AuthStateManager;
 import it.geosolutions.savemybike.R;
 import it.geosolutions.savemybike.data.server.AuthClient;
 import it.geosolutions.savemybike.data.server.RetrofitClient;
-import it.geosolutions.savemybike.data.server.S3Manager;
 import it.geosolutions.savemybike.model.Configuration;
 import it.geosolutions.savemybike.ui.utils.AuthUtils;
 import okhttp3.ResponseBody;
@@ -151,6 +153,8 @@ public abstract class SMBBaseActivity extends AppCompatActivity {
                 .enqueue(new Callback<ResponseBody>() {
                     @Override
                     public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                        // reset saved user to re-ask for user info on next login (e.g. profile completed)
+                        Configuration.saveUserProfile(getBaseContext(), null );
                         clearAuthState();
                         backToLogin();
                     }
@@ -158,9 +162,19 @@ public abstract class SMBBaseActivity extends AppCompatActivity {
                     @Override
                     public void onFailure(Call<ResponseBody> call, Throwable t) {
                         Log.e(TAG, "Error doing logout", t);
-                        backToLogin();
+                        if(!isNetworkAvailable()) {
+                            Toast.makeText(getBaseContext(), R.string.could_not_logout, Toast.LENGTH_LONG);
+                        } else {
+                            Toast.makeText(getBaseContext(), R.string.logout_generic_issue, Toast.LENGTH_LONG);
+                        }
                     }
                 });
+    }
+    public boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 
 
