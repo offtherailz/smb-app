@@ -263,5 +263,8 @@
     <string name="accept_terms_of_service"><p>I\'ve read the <a href="https://savemybike.geo-solutions.it/en/privacy_policy/" style="color: f51daf" target="_blank">Privacy Policy</a> and I accept the processing of personal data</p></string>
     <string name="terms_of_service">Terms of Service</string>
     <string name="please_select">Please select</string>
+    <string name="my_prizes">My Prizes</string>
+    <string name="up_for_grabs">Up For Grabs</string>
+    <string name="prizes">Prizes</string>
 
 </resources>

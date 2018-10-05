@@ -7,6 +7,7 @@ import it.geosolutions.savemybike.model.Bike;
 import it.geosolutions.savemybike.model.Configuration;
 import it.geosolutions.savemybike.model.CurrentStatus;
 import it.geosolutions.savemybike.model.PaginatedResult;
+import it.geosolutions.savemybike.model.Prize;
 import it.geosolutions.savemybike.model.Track;
 import it.geosolutions.savemybike.model.TrackItem;
 import it.geosolutions.savemybike.model.user.User;
@@ -62,4 +63,6 @@ public interface SMBRemoteServices {
     @PATCH("api/my-user")
     Call<ResponseBody> updateUser(@Body  User user);
 
+    @GET("api/my-prizes")
+    Call<PaginatedResult<Prize>> getMyPrizes();
 }

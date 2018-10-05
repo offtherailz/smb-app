@@ -229,4 +229,7 @@
     <string name="accept_terms_of_service"><p>Ho letto la <a href="https://savemybike.geo-solutions.it/it/privacy_policy/" style="color: f51daf" target="_blank">Privacy Policy</a> e accesso il trattamento dei dati personali</p></string>
     <string name="terms_of_service">Termini del Servizio</string>
     <string name="please_select">Selezionare</string>
+    <string name="my_prizes">I miei premi</string>
+    <string name="up_for_grabs">Premi In Palio</string>
+    <string name="prizes">Premi</string>
 </resources>
