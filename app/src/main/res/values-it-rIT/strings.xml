@@ -232,4 +232,11 @@
     <string name="my_prizes">I miei premi</string>
     <string name="up_for_grabs">Premi In Palio</string>
     <string name="prizes">Premi</string>
+    <string name="validity">Valido dal %s al %s</string>
+    <string name="congratulations_you_won">Complimenti! Hai vinto</string>
+    <string name="up_to_grab">Attualmente In palio</string>
+    <string name="no_competition_currently_active_title">Nessun premio in palio</string>
+    <string name="no_competition_currently_active_description">Non c\'è nessuna competizione attiva o premio in palio al momento. Ricontrolla questa pagina un\'altro giorno</string>
+    <string name="no_prize_title">Non hai vinto ancora nessun premio</string>
+    <string name="no_prize_description">Misurati nelle varie competizioni per vincere i premi in palio.</string>
 </resources>

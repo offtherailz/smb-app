@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.GridView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 
@@ -19,24 +20,31 @@ import butterknife.ButterKnife;
 import it.geosolutions.savemybike.R;
 import it.geosolutions.savemybike.data.server.RetrofitClient;
 import it.geosolutions.savemybike.data.server.SMBRemoteServices;
-import it.geosolutions.savemybike.model.Prize;
+import it.geosolutions.savemybike.model.PaginatedResult;
+import it.geosolutions.savemybike.model.competition.Competition;
 import it.geosolutions.savemybike.ui.activity.SaveMyBikeActivity;
-import it.geosolutions.savemybike.ui.adapters.PrizeAdapter;
+import it.geosolutions.savemybike.ui.adapters.competition.BaseCompetitionAdapter;
+import it.geosolutions.savemybike.ui.adapters.competition.WonCompetitionAdapter;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * @author Lorenzo Natali, GeoSolutions S.a.s.
- * Frabment for user's prizes list
+ * Frabment for user's won competitions list
  */
 
-public class MyPrizesFragment extends Fragment {
+public class WonCompetitionsFragment extends Fragment {
     public static final String TAG = "BADGES_LIST";
     @BindView(R.id.list) GridView listView;
     @BindView(R.id.content_layout) LinearLayout content;
 
     @BindView(R.id.progress_layout) LinearLayout progress;
     @BindView(R.id.swiperefresh) SwipeRefreshLayout mySwipeRefreshLayout;
+    @BindView(R.id.empty_competition) View emptyView;
+    @BindView(R.id.emptyNoNetwork) View emptyNoNetwork;
 
-    PrizeAdapter adapter;
+    BaseCompetitionAdapter adapter;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
@@ -46,9 +54,9 @@ public class MyPrizesFragment extends Fragment {
         SaveMyBikeActivity activity = ((SaveMyBikeActivity)getActivity());
         showEmpty(false, false);
         // setup adapter
-        ArrayList prizes = new ArrayList<Prize>();
+        ArrayList prizes = new ArrayList<Competition>();
 
-        adapter = new PrizeAdapter(activity, R.layout.item_prize, prizes);
+        adapter = new WonCompetitionAdapter(activity, R.layout.item_prize, prizes);
         listView.setAdapter(adapter);
         mySwipeRefreshLayout.setOnRefreshListener(() -> getPrizes());
         getPrizes();
@@ -63,12 +71,12 @@ public class MyPrizesFragment extends Fragment {
         SMBRemoteServices portalServices = client.getPortalServices();
 
         showProgress(true);
-        /*
-        portalServices.getMyPrizes().enqueue(new Callback<PaginatedResult<Prize>>() {
+
+        portalServices.getMyPrizes().enqueue(new Callback<PaginatedResult<Competition>>() {
             @Override
-            public void onResponse(Call<PaginatedResult<Prize>> call, Response<PaginatedResult<Prize>> response) {
+            public void onResponse(Call<PaginatedResult<Competition>> call, Response<PaginatedResult<Competition>> response) {
                 showProgress(false);
-                PaginatedResult<Prize> result = response.body();
+                PaginatedResult<Competition> result = response.body();
                 if(result != null && result.getResults() != null) {
                     adapter.clear();
                     adapter.addAll(response.body().getResults());
@@ -82,17 +90,13 @@ public class MyPrizesFragment extends Fragment {
             }
 
             @Override
-            public void onFailure(Call<PaginatedResult<Prize>> call, Throwable t) {
+            public void onFailure(Call<PaginatedResult<Competition>> call, Throwable t) {
                 showProgress(false);
                 showEmpty(true, true);
+                adapter.clear();
+                adapter.notifyDataSetChanged();
             }
         });
-        */
-        ArrayList<Prize> prizes = new ArrayList<>();
-        prizes.add(new Prize());
-        adapter.addAll(prizes);
-        adapter.notifyDataSetChanged();
-        showProgress(false);
     }
     /**
      * Switches the UI of this screen to show either the progress UI or the content
@@ -130,17 +134,18 @@ public class MyPrizesFragment extends Fragment {
         }
     }
     private void showEmpty(boolean show, boolean noNetwork) {
-        if(getActivity() != null) {
-            View e = getActivity().findViewById(R.id.empty_badges);
-            View n = getActivity().findViewById(R.id.emptyNoNetwork);
-            if (e != null) {
-                boolean showEmpty = show && !noNetwork || show && n == null;
-                e.setVisibility(showEmpty ? View.VISIBLE : View.GONE);
-            }
-            if(n != null) {
-                n.setVisibility(show && noNetwork ? View.VISIBLE : View.GONE);
-            }
+        View e = emptyView;
+        View n = emptyNoNetwork;
+        if (e != null) {
+            boolean showEmpty = show && !noNetwork || show && n == null;
+            e.setVisibility(showEmpty ? View.VISIBLE : View.GONE);
+            ((TextView) e.findViewById(R.id.empty_text)).setText(R.string.no_prize_title);
+            ((TextView) e.findViewById(R.id.empty_description)).setText(R.string.no_prize_description);
+        }
+        if(n != null) {
+            n.setVisibility(show && noNetwork ? View.VISIBLE : View.GONE);
         }
     }
+
 
 }

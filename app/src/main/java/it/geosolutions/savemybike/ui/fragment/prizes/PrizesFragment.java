@@ -4,25 +4,26 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import it.geosolutions.savemybike.R;
 import it.geosolutions.savemybike.ui.adapters.ViewPagerAdapter;
-import it.geosolutions.savemybike.ui.fragment.BaseProfileFragment;
 
 /**
  * Created by Lorenzo Natali
- * Show prizes view
+ * Base container for Prizes views. Allow to navigate user's won and current available competitions
  *
  */
 
 public class PrizesFragment extends Fragment{
-    private int initialItem = R.id.navigation_user_profile;
+    private int initialItem = R.id.navigation_prizes_up_for_grabs;
     @BindView(R.id.navigation) BottomNavigationView navigation;
     @BindView(R.id.activities_content) ViewPager viewPager;
     /**
@@ -36,10 +37,11 @@ public class PrizesFragment extends Fragment{
     public boolean setNavigation(int itemId) {
 
         switch(itemId){
-            case R.id.navigation_my_prizes:
+
+            case R.id.navigation_prizes_up_for_grabs:
                 selectItem(0);
                 return true;
-            case R.id.navigation_prizes_up_for_grabs:
+            case R.id.navigation_my_prizes:
                 selectItem(1);
                 return true;
 
@@ -75,8 +77,8 @@ public class PrizesFragment extends Fragment{
     private void setupViewPager(View view) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getChildFragmentManager());
         // Add Fragments to adapter one by one
-        adapter.addFragment(new MyPrizesFragment(), getResources().getString(R.string.my_prizes));
-        adapter.addFragment(new UpForGrabFragment(), getResources().getString(R.string.up_for_grabs));
+        adapter.addFragment(new CurrentCompetitionsFragment(), getResources().getString(R.string.up_for_grabs));
+        adapter.addFragment(new WonCompetitionsFragment(), getResources().getString(R.string.my_prizes));
         viewPager.setAdapter(adapter);
         setNavigation(this.initialItem);
 
