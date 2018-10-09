@@ -15,8 +15,8 @@ import it.geosolutions.savemybike.model.competition.Competition;
  * Adapter to display won competitions
  */
 public class WonCompetitionAdapter extends BaseCompetitionAdapter {
-    public WonCompetitionAdapter(Context context, int textViewResourceId, List<Competition> badges) {
-        super(context, textViewResourceId, badges);
+    public WonCompetitionAdapter(Context context, int textViewResourceId, List<Competition> competitions) {
+        super(context, textViewResourceId, competitions);
     }
 
     @NonNull

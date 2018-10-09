@@ -3,17 +3,13 @@ package it.geosolutions.savemybike.ui.adapters.competition;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.GridView;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
-
-import org.joda.time.DateTime;
-import org.joda.time.format.DateTimeFormat;
 
 import java.util.List;
 
@@ -21,7 +17,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import it.geosolutions.savemybike.R;
 import it.geosolutions.savemybike.model.competition.Competition;
-import it.geosolutions.savemybike.model.competition.Prize;
 
 /**
  * Base adapter for competitions
@@ -31,21 +26,23 @@ public class BaseCompetitionAdapter extends ArrayAdapter<Competition> {
     protected int resource;
     static class ViewHolder {
         @BindView(R.id.header) View header;
-        @BindView(R.id.item_prize) View view;
+        @BindView(R.id.item_competition) View view;
         @BindView(R.id.title) TextView title;
         @BindView(R.id.description) TextView description;
         @BindView(R.id.subtitle) TextView subtitle;
-        @BindView(R.id.prize_image) ImageView icon;
+        @BindView(R.id.competition_image) ImageView icon;
+        @BindView(R.id.prizes_grid)
+        GridView prizesGrid;
         public ViewHolder(View view) {
             ButterKnife.bind(this, view);
         }
     }
 
 
-    public BaseCompetitionAdapter(final Context context, int textViewResourceId, List<Competition> badges){
-        super(context, textViewResourceId, badges);
+    public BaseCompetitionAdapter(final Context context, int resourceId, List<Competition> competitions){
+        super(context, resourceId, competitions);
 
-        resource = textViewResourceId;
+        resource = resourceId;
     }
 
 
@@ -68,8 +65,10 @@ public class BaseCompetitionAdapter extends ArrayAdapter<Competition> {
         if(competition != null) {
             // TODO
             holder.title.setText(competition.getName());
-
-            // holder.icon.setImageResource(R.drawable.img_ctt_pisa);
+            holder.description.setText(competition.getDescription());
+        }
+        if(competition.getPrizes() != null) {
+            holder.prizesGrid.setAdapter(new CompetitionPrizeAdapter(getContext(), R.layout.item_prize, competition.getPrizes()));
         }
 
         return view;

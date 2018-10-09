@@ -49,14 +49,14 @@ public class CurrentCompetitionsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
 
-        final View view = inflater.inflate(R.layout.fragment_my_prizes, container, false);
+        final View view = inflater.inflate(R.layout.fragment_competition_list, container, false);
         ButterKnife.bind(this, view);
         SaveMyBikeActivity activity = ((SaveMyBikeActivity)getActivity());
         showEmpty(false, false);
         // setup adapter
         ArrayList prizes = new ArrayList<Competition>();
         header.setText(R.string.up_to_grab);
-        adapter = new CurrentCompetitionAdapter(activity, R.layout.item_prize, prizes);
+        adapter = new CurrentCompetitionAdapter(activity, R.layout.item_competition, prizes);
         listView.setAdapter(adapter);
         mySwipeRefreshLayout.setOnRefreshListener(() -> getPrizes());
         getPrizes();

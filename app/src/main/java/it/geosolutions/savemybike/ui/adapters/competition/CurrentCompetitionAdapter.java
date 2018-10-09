@@ -21,8 +21,8 @@ import it.geosolutions.savemybike.model.competition.Prize;
  * Adapter that shows current available competitions
  */
 public class CurrentCompetitionAdapter extends BaseCompetitionAdapter {
-    public CurrentCompetitionAdapter(Context context, int textViewResourceId, List<Competition> badges) {
-        super(context, textViewResourceId, badges);
+    public CurrentCompetitionAdapter(Context context, int textViewResourceId, List<Competition> competitions) {
+        super(context, textViewResourceId, competitions);
     }
 
     @NonNull
@@ -49,28 +49,6 @@ public class CurrentCompetitionAdapter extends BaseCompetitionAdapter {
                 String endDate = DateTimeFormat.forPattern("dd MMMM").print(new DateTime((competition.getEndDate())));
                 String subTitle = String.format(getContext().getResources().getString(R.string.validity), startDate, endDate);
                 holder.subtitle.setText(subTitle);
-            }
-
-            // format prize title and description
-            for(Prize p : competition.getPrizes()) {
-                if(p.getName() != null && p.getSponsor() != null) {
-                    holder.title.setText(Html.fromHtml("<p>"
-                            + p.getName()
-                            +"</p><"
-                            + "<p>"
-                            + p.getSponsor()
-                            + "</p>"));
-                }
-                if(p.getDescription() != null) {
-                    holder.description.setText(p.getDescription());
-                }
-
-                 /*  TODO retrieve image from URL
-                GlideApp
-                    .with(getContext())
-                    .load(p.getImage())
-                    .into((ImageView) holder.icon);
-                    */
             }
         }
 

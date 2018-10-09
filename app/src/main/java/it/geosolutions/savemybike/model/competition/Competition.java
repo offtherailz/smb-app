@@ -15,7 +15,7 @@ public class Competition {
     @SerializedName("end_date")
     String endDate;
 
-    ArrayList<Prize> prizes;
+    ArrayList<CompetitionPrize> prizes;
 
     public String getName() {
         return name;
@@ -49,11 +49,11 @@ public class Competition {
         this.endDate = endDate;
     }
 
-    public ArrayList<Prize> getPrizes() {
+    public ArrayList<CompetitionPrize> getPrizes() {
         return prizes;
     }
 
-    public void setPrizes(ArrayList<Prize> prizes) {
+    public void setPrizes(ArrayList<CompetitionPrize> prizes) {
         this.prizes = prizes;
     }
 }
