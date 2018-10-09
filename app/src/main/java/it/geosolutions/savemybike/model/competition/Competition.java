@@ -16,6 +16,8 @@ public class Competition {
     String endDate;
 
     ArrayList<CompetitionPrize> prizes;
+    @SerializedName("winner_description")
+    String winnerDescription;
 
     public String getName() {
         return name;
@@ -55,5 +57,13 @@ public class Competition {
 
     public void setPrizes(ArrayList<CompetitionPrize> prizes) {
         this.prizes = prizes;
+    }
+
+    public String getWinnerDescription() {
+        return winnerDescription;
+    }
+
+    public void setWinnerDescription(String winnerDescription) {
+        this.winnerDescription = winnerDescription;
     }
 }

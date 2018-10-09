@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 
 import java.util.List;
 
+import it.geosolutions.savemybike.R;
 import it.geosolutions.savemybike.model.competition.Competition;
 
 /**
@@ -34,6 +35,7 @@ public class WonCompetitionAdapter extends BaseCompetitionAdapter {
         }
         holder.subtitle.setVisibility(View.GONE);
         holder.header.setVisibility(View.VISIBLE);
+        holder.description.setText(getItem(position).getWinnerDescription());
         return view;
     }
 }
