@@ -1,6 +1,8 @@
 package it.geosolutions.savemybike.utils;
 
 
+import android.icu.util.Measure;
+
 import java.text.DecimalFormat;
 import java.util.Map;
 import java.util.NavigableMap;
@@ -8,14 +10,18 @@ import java.util.TreeMap;
 
 
 /**
- * Utility to format unit of measure in the
+ * Utility to format unit of measure
+ *
  */
 public class UOMUtils {
+    /**
+     * Measure container. Holds the value and the unit of measure.
+     */
     public static class Measure {
             Double value;
             String uom;
     }
-    // can be extended
+    // can be extended for custom units, (for instance hg, Tons...)
     protected static NavigableMap<Double, String> suffixes = new TreeMap<>();
 
     static {
@@ -42,6 +48,12 @@ public class UOMUtils {
         Measure m = roundToUom(value);
         return df.format(m.value) + separator + m.uom;
     }
+
+    /**
+     * Rounds a value to the human readable unit of measure
+     * @param value
+     * @return a Measure with uom (multiplier). e.g. 1000  becomes (value:1, uom: "k")
+     */
     public static Measure roundToUom(double value) {
 
         //Long.MIN_VALUE == -Long.MIN_VALUE so we need an adjustment here
