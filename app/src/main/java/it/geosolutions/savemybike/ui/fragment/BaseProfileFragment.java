@@ -13,14 +13,13 @@ import com.bumptech.glide.request.RequestOptions;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnTextChanged;
 import it.geosolutions.savemybike.GlideApp;
 import it.geosolutions.savemybike.R;
 import it.geosolutions.savemybike.data.Constants;
 import it.geosolutions.savemybike.model.Configuration;
 import it.geosolutions.savemybike.model.EmissionData;
+import it.geosolutions.savemybike.model.HealthData;
 import it.geosolutions.savemybike.model.user.Profile;
-import it.geosolutions.savemybike.model.user.User;
 import it.geosolutions.savemybike.model.user.UserInfo;
 import it.geosolutions.savemybike.utils.UOMUtils;
 
@@ -38,26 +37,42 @@ public class BaseProfileFragment extends Fragment {
     @BindView(R.id.phone_number) TextView phoneNumber;
     @BindView(R.id.userAvatar) ImageView avatar;
     @BindView(R.id.email_text) TextView email;
+    @BindView(R.id.telephone_row) View phoneRow;
 
     @BindView(R.id.co2_text) TextView c02;
     @BindView(R.id.pm10_text) TextView pm10;
+    @BindView(R.id.total_calories_text) TextView calories;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
 
-        final View view = inflater.inflate(R.layout.base_profile_fragment2, container, false);
+        final View view = inflater.inflate(R.layout.base_profile_fragment, container, false);
         ButterKnife.bind(this, view);
         user = Configuration.getUserProfile(getContext());
         if(user != null) {
             name.setText(user.getFirstName() + " " + user.getLastName());
             email.setText(user.getEmail());
             Profile p = user.getProfile();
-            phoneNumber.setText(p.getPhoneNumber());
+            if(p.getPhoneNumber() != null) {
+                phoneNumber.setText(p.getPhoneNumber());
+            } else {
+                phoneRow.setVisibility(View.GONE);
+            }
+
             EmissionData emissions = user.getTotalEmissions();
             if(emissions!= null) {
                 c02.setText(UOMUtils.format( emissions.getCo2Saved() , "###") + "g" );
                 pm10.setText(UOMUtils.format(emissions.getPm10Saved() / 1000, "###") + "g" );
+            } else {
+                c02.setText("N/A");
+                pm10.setText("N/A");
+            }
+            HealthData hd = user.getTotalHealthBenefits();
+            if(hd != null) {
+                calories.setText(hd.getCaloriesConsumed() != null ? UOMUtils.format(hd.getCaloriesConsumed(), "###") + "g" : "N/A");
+            } else {
+                calories.setText("N/A");
             }
 
             GlideApp.with(this)
