@@ -22,6 +22,7 @@ import it.geosolutions.savemybike.R;
 import it.geosolutions.savemybike.data.server.RetrofitClient;
 import it.geosolutions.savemybike.data.server.SMBRemoteServices;
 import it.geosolutions.savemybike.model.PaginatedResult;
+import it.geosolutions.savemybike.model.Track;
 import it.geosolutions.savemybike.model.TrackItem;
 import it.geosolutions.savemybike.ui.activity.TrackDetailsActivity;
 import it.geosolutions.savemybike.ui.adapters.TrackItemAdapter;
@@ -63,8 +64,8 @@ public class TracksFragment extends Fragment {
 
 
             Intent intent = new Intent(getActivity(), TrackDetailsActivity.class);
-
-            intent.putExtra(TrackDetailsActivity.TRACK_ID, (Long) itemView.getTag());
+            TrackItem t = (TrackItem) listView.getAdapter().getItem(position);
+            intent.putExtra(TrackDetailsActivity.TRACK_ID, t.getId());
 
             /* TODO: animation transition. Something like this...
             // Check if we're running on Android 5.0 or higher

@@ -59,24 +59,29 @@
 
     <LinearLayout
         android:id="@+id/vehicle_grid"
-        android:layout_width="97dp"
-        android:layout_height="37dp"
+        android:layout_width="72dp"
+        android:layout_height="36dp"
         android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="8dp"
         android:gravity="right"
+        android:orientation="horizontal"
         app:layout_constraintBottom_toTopOf="@+id/session_duration_text"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/imageView"
         app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
             android:id="@+id/vehicle_1"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            tools:src="@drawable/ic_directions_bike" />
 
         <ImageView
             android:id="@+id/vehicle_2"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            tools:src="@drawable/ic_directions_train" />
 
         <TextView
             android:id="@+id/more_veihicles"
@@ -130,19 +135,16 @@
         android:contentDescription="@string/session_duration" />
 
     <ImageView
-        android:id="@+id/uploaded"
-        android:visibility="gone"
+        android:id="@+id/status"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        app:layout_constraintBottom_toTopOf="@+id/session_duration_text"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@+id/guideline"
         app:layout_constraintEnd_toStartOf="@+id/vehicle_grid"
-        app:layout_constraintStart_toEndOf="@+id/session_start_datetime"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/ic_circle_checked" />
+        app:layout_constraintTop_toTopOf="@+id/vehicle_grid"
+        tools:src="@drawable/ic_error"
+        tools:visibility="visible" />
 
 
 </android.support.constraint.ConstraintLayout>

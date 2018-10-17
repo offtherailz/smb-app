@@ -51,4 +51,9 @@ public class TrackItem extends BaseTrack {
         this.health = health;
     }
 
+
+    public boolean isInvalid() {
+        return true;
+    }
+
 }
