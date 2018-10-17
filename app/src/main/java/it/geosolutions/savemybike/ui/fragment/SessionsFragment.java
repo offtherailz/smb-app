@@ -25,6 +25,7 @@ import butterknife.internal.DebouncingOnClickListener;
 import it.geosolutions.savemybike.R;
 import it.geosolutions.savemybike.model.Session;
 import it.geosolutions.savemybike.ui.activity.SMBBaseActivity;
+import it.geosolutions.savemybike.ui.activity.SessionDetailsActivity;
 import it.geosolutions.savemybike.ui.activity.TrackDetailsActivity;
 import it.geosolutions.savemybike.ui.adapters.SessionAdapter;
 import it.geosolutions.savemybike.ui.tasks.DeleteSessionTask;
@@ -64,6 +65,7 @@ public class SessionsFragment extends Fragment {
             public void onDelete(Session s) {
                 deleteSession(s);
             }
+            public void onEdit(Session s) { editSession(s); }
         };
         listView.setAdapter(adapter);
         view.findViewById(R.id.upload_button).setOnClickListener(new DebouncingOnClickListener() {
@@ -72,6 +74,7 @@ public class SessionsFragment extends Fragment {
                 startUpload();
             }
         });
+
         mySwipeRefreshLayout.setOnRefreshListener(() -> invalidateSessions());
 
 
@@ -80,7 +83,6 @@ public class SessionsFragment extends Fragment {
 
         return view;
     }
-
 
 
     /**
@@ -204,4 +206,13 @@ public class SessionsFragment extends Fragment {
             }
         }
     }
+    private void editSession(Session s) {
+        Intent intent = new Intent(getActivity(), SessionDetailsActivity.class);
+
+        intent.putExtra(SessionDetailsActivity.SESSION_ID, (Long) s.getId());
+        getActivity().startActivity(intent);
+    }
+
+
+
 }

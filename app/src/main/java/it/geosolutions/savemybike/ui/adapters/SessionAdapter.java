@@ -2,6 +2,7 @@ package it.geosolutions.savemybike.ui.adapters;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.util.Pair;
@@ -26,6 +27,7 @@ import it.geosolutions.savemybike.R;
 import it.geosolutions.savemybike.data.Constants;
 import it.geosolutions.savemybike.model.Session;
 import it.geosolutions.savemybike.ui.activity.SaveMyBikeActivity;
+import it.geosolutions.savemybike.ui.activity.TrackDetailsActivity;
 
 import com.chauthai.swipereveallayout.SwipeRevealLayout;
 import com.chauthai.swipereveallayout.ViewBinderHelper;
@@ -119,6 +121,7 @@ public abstract class SessionAdapter extends ArrayAdapter<Session> {
             frontView.setOnClickListener((view) -> {
                 String[] options = new String[]{
                         getContext().getResources().getString(R.string.delete_session),
+                        getContext().getResources().getString(R.string.edit_session),
                         getContext().getResources().getString(R.string.cancel)
                 };
                 new AlertDialog.Builder(getContext())
@@ -131,6 +134,9 @@ public abstract class SessionAdapter extends ArrayAdapter<Session> {
                                     onDelete(item);
                                     SwipeRevealLayout l = (SwipeRevealLayout) convertView.findViewById(R.id.swipe_layout);
                                     l.close(false);
+                                } else if (which == 1) {
+                                    //TODO: externalize click listener
+                                    onEdit(item);
                                 }
                             }
                         }).show();
@@ -146,4 +152,6 @@ public abstract class SessionAdapter extends ArrayAdapter<Session> {
     }
 
     public abstract void onDelete(Session s);
+
+    public abstract void onEdit(Session s);
 }

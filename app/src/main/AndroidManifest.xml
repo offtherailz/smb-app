@@ -74,6 +74,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".ui.activity.TrackDetailsActivity" />
+        <activity android:name=".ui.activity.SessionDetailsActivity" />
         <activity
             android:name=".ui.activity.CompleteProfile"
             android:label="@string/title_activity_complete_profile"
