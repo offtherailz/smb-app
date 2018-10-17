@@ -8,7 +8,6 @@ import com.google.gson.annotations.SerializedName;
  */
 public class Segment {
     private int id;
-    private String url;
     // geom	string
 
     @SerializedName("start_date")
@@ -19,6 +18,7 @@ public class Segment {
     @SerializedName("vehicle_type")
     private String veihicleType;
 
+    private int sessionId;
 
     private String geom;
     public int getId() {
@@ -27,6 +27,14 @@ public class Segment {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public int getSessionId() {
+        return sessionId;
+    }
+
+    public void setSessionId(int sessionId) {
+        this.sessionId = sessionId;
     }
 
     public String getStartDate() {
@@ -59,6 +67,52 @@ public class Segment {
 
     public void setGeom(String geom) {
         this.geom = geom;
+    }
+
+    public void setVeihicleTypeEnum(Vehicle.VehicleType vehicleType) {
+        switch (vehicleType) {
+            case BIKE:
+                this.veihicleType = Vehicle.StringTypes.BIKE;
+                break;
+            case BUS:
+                this.veihicleType = Vehicle.StringTypes.BUS;
+                break;
+            case CAR:
+                this.veihicleType = Vehicle.StringTypes.CAR;
+                break;
+            case FOOT:
+                this.veihicleType = Vehicle.StringTypes.FOOT;
+                break;
+            case MOPED:
+                this.veihicleType = Vehicle.StringTypes.MOPED;
+                break;
+            case TRAIN:
+                this.veihicleType = Vehicle.StringTypes.TRAIN;
+                break;
+        }
+    }
+    public Vehicle.VehicleType getVeihicleTypeEnum() {
+        switch (this.veihicleType) {
+            case Vehicle.StringTypes.BIKE:
+                return Vehicle.VehicleType.BIKE;
+
+            case Vehicle.StringTypes.BUS:
+                return Vehicle.VehicleType.BUS;
+
+            case Vehicle.StringTypes.CAR:
+                return Vehicle.VehicleType.CAR;
+
+            case Vehicle.StringTypes.FOOT:
+                return Vehicle.VehicleType.FOOT;
+
+            case Vehicle.StringTypes.MOPED:
+                return Vehicle.VehicleType.MOPED;
+
+            case Vehicle.StringTypes.TRAIN:
+                return Vehicle.VehicleType.TRAIN;
+
+        }
+        return null;
     }
 
     // ...url, track, vehicle_id, emissions, costs, health

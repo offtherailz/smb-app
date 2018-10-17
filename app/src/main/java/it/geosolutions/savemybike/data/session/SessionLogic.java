@@ -264,7 +264,7 @@ public class SessionLogic implements IDataProvider {
                 } else {
                     database.insertSession(session, true);
                 }
-
+                // TODO persist segment
                 //persist dataPoints
                 if (session.getDataPoints() != null) {
 

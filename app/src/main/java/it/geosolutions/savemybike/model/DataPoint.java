@@ -15,6 +15,7 @@ import it.geosolutions.savemybike.BuildConfig;
 public class DataPoint {
 
     public long sessionId;
+    public long segmentId;
     public int vehicleMode;
 
     public long timeStamp;
@@ -117,6 +118,8 @@ public class DataPoint {
                 return Float.toString(dataPoint.proximity);
             case "sessionId":
                 return Long.toString(dataPoint.sessionId);
+            case "segmentId":
+                return Long.toString(dataPoint.segmentId);
             case "speed":
                 return Float.toString(dataPoint.speed);
             case "temperature":

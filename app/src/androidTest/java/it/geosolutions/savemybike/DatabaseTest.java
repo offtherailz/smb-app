@@ -8,10 +8,13 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import java.io.File;
+import java.text.DateFormat;
+import java.util.Date;
 
 import it.geosolutions.savemybike.data.db.SMBDatabase;
 import it.geosolutions.savemybike.model.Bike;
 import it.geosolutions.savemybike.model.DataPoint;
+import it.geosolutions.savemybike.model.Segment;
 import it.geosolutions.savemybike.model.Session;
 import it.geosolutions.savemybike.model.Vehicle;
 
@@ -56,8 +59,13 @@ public class DatabaseTest {
 
         long testId = database.insertSession(testSession, false);
         testSession.setId(testId);
-
-        //2.create and insert a dataPoint
+        //2. create the segment
+        final Date start =  new Date();
+        Segment s = new Segment();
+        s.setVeihicleTypeEnum(vehicleType);
+        // TODO: other fields
+        long segmentId = database.insertSegment(s);
+        //3.create and insert a dataPoint
         final long time = System.currentTimeMillis();
         final double lat = 43.6200172;
         final double lon = 10.3161126;
@@ -111,7 +119,7 @@ public class DatabaseTest {
         assertNotNull(database2);
         assertTrue(database2.open());
 
-        //3.read from database
+        //4.read from database
         final Session insertedSession = database2.getSession(testId);
         assertNotNull(insertedSession);
 
@@ -124,6 +132,7 @@ public class DatabaseTest {
         assertTrue(insertedSession.getLastPersistedIndex() == 1);
         assertTrue(insertedSession.isUploaded());
 
+        // TODO: test segments
         assertNotNull(insertedSession.getDataPoints());
         assertTrue(insertedSession.getDataPoints().size() > 0);
         assertTrue(insertedSession.getDataPoints().size() == 1);

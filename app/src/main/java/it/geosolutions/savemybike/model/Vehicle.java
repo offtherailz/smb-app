@@ -64,4 +64,5 @@ public class Vehicle implements Serializable {
     public boolean isSelected() {
         return selected;
     }
+
 }

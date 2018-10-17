@@ -13,7 +13,9 @@ import java.util.Locale;
 
 import it.geosolutions.savemybike.model.Bike;
 import it.geosolutions.savemybike.model.DataPoint;
+import it.geosolutions.savemybike.model.Segment;
 import it.geosolutions.savemybike.model.Session;
+import it.geosolutions.savemybike.model.Vehicle;
 
 /**
  * Created by Robert Oehler on 09.11.17.
@@ -25,18 +27,20 @@ public class SMBDatabase extends SQLiteOpenHelper {
 
     private final String TAG = "SMBDatabase";
 
-    private static final int DATABASE_VERSION = 2;
+    private static final int DATABASE_VERSION = 3;
 
     private static final String DATABASE_NAME = "smbDb.db";
 
     //Tables
     private static final String BIKES_TABLE = "bikes";
     private static final String SESSIONS_TABLE = "sessions";
+    private static final String SEGMENTS_TABLE = "segments";
     private static final String DATA_POINTS_TABLE = "datapoints";
 
     //Ids
     private static final String ID = "_id";
     private static final String SESSION_ID = "session_id";
+    private static final String SEGMENT_ID = "segment_id";
 
     //Session Table
     private static final String BIKE_ID = "bike_id";
@@ -70,6 +74,10 @@ public class SMBDatabase extends SQLiteOpenHelper {
     private static final String DEVICE_ROLL = "dev_roll";
     private static final String DEVICE_PITCH = "dev_pitch";
 
+    //Segments Table
+    private static final String START_DATE = "start_date";
+    private static final String END_DATE = "end_date";
+
     //Bikes Table
     private static final String IMAGE_URI = "image_uri";
     private static final String STOLEN = "stolen";
@@ -91,6 +99,7 @@ public class SMBDatabase extends SQLiteOpenHelper {
     private static final String CREATE_DATA_POINTS_TABLE =
             "CREATE TABLE " + DATA_POINTS_TABLE +
                     " (" + ID + " integer primary key autoincrement, " +
+                    SEGMENT_ID + " integer, " +
                     SESSION_ID + " integer, "+
                     VEHICLE + " integer, " +
                     LATITUDE + " float, " +
@@ -113,6 +122,14 @@ public class SMBDatabase extends SQLiteOpenHelper {
                     DEVICE_PITCH + " float, " +
                     DEVICE_ROLL + " float, " +
                     TEMPERATURE + " float);";
+    private static final String CREATE_SEGMENTS_TABLE =
+            "CREATE TABLE " + SEGMENTS_TABLE
+                + "("
+                    + ID + " integer primary key autoincrement, "
+                    + SESSION_ID + " integer, "
+                    + VEHICLE + " integer,"
+                    + START_DATE + " string,"
+                    + END_DATE + " string)";
 
     private static final String CREATE_BIKES_TABLE =
             "CREATE TABLE " + BIKES_TABLE +
@@ -168,6 +185,31 @@ public class SMBDatabase extends SQLiteOpenHelper {
             db.execSQL("alter table datapoints ADD COLUMN dev_pitch float;");
 
         }
+        if(oldVersion < 3){
+            db.execSQL("alter table datapoints ADD COLUMN segment_id integer;");
+            db.execSQL(CREATE_SEGMENTS_TABLE);
+            createMissingSegments();
+
+
+        }
+    }
+
+    /**
+     * Update function to migrate existing segments
+     */
+    private void createMissingSegments() {
+        // TODO: update current with missing segmetns
+
+        for(Session s : getAllSessions()) {
+            ArrayList<Segment> segments = new ArrayList<>();
+            Segment segment = new Segment();
+            for(DataPoint point : getDataPointsForSession(s.getId())) {
+
+            }
+        }
+
+
+
     }
 
     /**
@@ -230,6 +272,22 @@ public class SMBDatabase extends SQLiteOpenHelper {
         }
     }
 
+    public long insertSegment(final Segment segment){
+        ContentValues cv = createContentValues(segment);
+        return db.insert(SEGMENTS_TABLE, null, cv);
+    }
+    public long updateSegment(final Segment segment){
+        ContentValues cv = createContentValues(segment);
+        cv.put(ID, segment.getId());
+        return db.update(SEGMENTS_TABLE, cv, ID + "=" + segment.getId(), null);
+    }
+    private ContentValues createContentValues(Segment segment) {
+        ContentValues cv = new ContentValues();
+        if(segment.getVeihicleType() != null) {
+            cv.put(VEHICLE, segment.getVeihicleTypeEnum().ordinal());
+        }
+        return cv;
+    }
     /**
      * inserts a dataPoint
      * @param dataPoint the dataPoint to insert
@@ -241,6 +299,7 @@ public class SMBDatabase extends SQLiteOpenHelper {
 
         //assign values
         cv.put(SESSION_ID, dataPoint.sessionId);
+        cv.put(SEGMENT_ID, dataPoint.segmentId);
         cv.put(VEHICLE, dataPoint.vehicleMode);
         cv.put(LATITUDE, (float) dataPoint.latitude);
         cv.put(LONGITUDE, (float) dataPoint.longitude);

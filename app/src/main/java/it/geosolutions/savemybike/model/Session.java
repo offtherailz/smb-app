@@ -95,6 +95,7 @@ public class Session {
     public void deepCopyCurrentDataPoint(){
 
         DataPoint copy = new DataPoint(this.id, System.currentTimeMillis(), this.currentVehicleType.ordinal());
+        copy.segmentId = getCurrentDataPoint().segmentId;
         copy.elevation = getCurrentDataPoint().elevation;
         copy.latitude = getCurrentDataPoint().latitude;
         copy.longitude = getCurrentDataPoint().longitude;
