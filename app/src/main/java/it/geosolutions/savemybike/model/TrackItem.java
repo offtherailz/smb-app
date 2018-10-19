@@ -19,6 +19,10 @@ public class TrackItem extends BaseTrack {
 
     private HealthData health;
 
+    @SerializedName("is_valid") private boolean isValid;
+
+    @SerializedName("validation_error") private boolean validationError;
+
     public ArrayList<Segment> getSegments() {
         return segments;
     }
@@ -52,8 +56,19 @@ public class TrackItem extends BaseTrack {
     }
 
 
-    public boolean isInvalid() {
-        return true;
+    public boolean isValid() {
+        return isValid;
     }
 
+    public void setValid(boolean valid) {
+        isValid = valid;
+    }
+
+    public boolean isValidationError() {
+        return validationError;
+    }
+
+    public void setValidationError(boolean validationError) {
+        this.validationError = validationError;
+    }
 }
