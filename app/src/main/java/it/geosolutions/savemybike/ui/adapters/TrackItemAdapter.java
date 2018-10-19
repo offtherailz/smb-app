@@ -74,12 +74,12 @@ public class TrackItemAdapter extends ArrayAdapter<TrackItem> {
         final TrackItem track = getItem(position);
         if(track != null) {
             TrackDetailsActivity.inflateTrackDataToRecordView(track, view);
-            if(track.isInvalid()) {
+            if(track.isValid()) {
+                holder.status.setVisibility(View.GONE);
+            } else {
                 holder.status.setVisibility(View.VISIBLE);
                 holder.status.setImageResource(R.drawable.ic_error);
                 holder.status.setColorFilter(getContext().getResources().getColor(R.color.red));
-            } else {
-                holder.status.setVisibility(View.GONE);
             }
         }
 

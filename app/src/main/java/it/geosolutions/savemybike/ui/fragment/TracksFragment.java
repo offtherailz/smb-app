@@ -7,12 +7,12 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -22,7 +22,6 @@ import it.geosolutions.savemybike.R;
 import it.geosolutions.savemybike.data.server.RetrofitClient;
 import it.geosolutions.savemybike.data.server.SMBRemoteServices;
 import it.geosolutions.savemybike.model.PaginatedResult;
-import it.geosolutions.savemybike.model.Track;
 import it.geosolutions.savemybike.model.TrackItem;
 import it.geosolutions.savemybike.ui.activity.TrackDetailsActivity;
 import it.geosolutions.savemybike.ui.adapters.TrackItemAdapter;
@@ -61,13 +60,12 @@ public class TracksFragment extends Fragment {
 
         mySwipeRefreshLayout.setOnRefreshListener(() -> getTracks());
         listView.setOnItemClickListener((parent, itemView, position, id) -> {
-
-
-            Intent intent = new Intent(getActivity(), TrackDetailsActivity.class);
             TrackItem t = (TrackItem) listView.getAdapter().getItem(position);
-            intent.putExtra(TrackDetailsActivity.TRACK_ID, t.getId());
+            if(t.isValid()) {
+                Intent intent = new Intent(getActivity(), TrackDetailsActivity.class);
 
-            /* TODO: animation transition. Something like this...
+                intent.putExtra(TrackDetailsActivity.TRACK_ID, t.getId());
+                /* TODO: animation transition. Something like this...
             // Check if we're running on Android 5.0 or higher
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 // create the transition animation - the images in the layouts
@@ -78,8 +76,20 @@ public class TracksFragment extends Fragment {
             } else {
                 getActivity().startActivity(intent);
             }*/
-            getActivity().startActivity(intent);
-            getActivity().overridePendingTransition(R.anim.fadein, R.anim.fadeout);
+                getActivity().startActivity(intent);
+                getActivity().overridePendingTransition(R.anim.fadein, R.anim.fadeout);
+            } else {
+                if(t.getValidationError() != null) {
+                    // TODO: validation error
+                } else {
+                    Toast.makeText(getContext(), R.string.track_invalid, Toast.LENGTH_LONG).show();
+                }
+
+            }
+
+
+
+
         });
         // TODO: show also sessions, grayed out
         getTracks();

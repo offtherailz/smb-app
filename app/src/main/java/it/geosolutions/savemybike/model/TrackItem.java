@@ -21,7 +21,7 @@ public class TrackItem extends BaseTrack {
 
     @SerializedName("is_valid") private boolean isValid;
 
-    @SerializedName("validation_error") private boolean validationError;
+    @SerializedName("validation_error") private String validationError;
 
     public ArrayList<Segment> getSegments() {
         return segments;
@@ -64,11 +64,11 @@ public class TrackItem extends BaseTrack {
         isValid = valid;
     }
 
-    public boolean isValidationError() {
+    public String getValidationError() {
         return validationError;
     }
 
-    public void setValidationError(boolean validationError) {
+    public void setValidationError(String validationError) {
         this.validationError = validationError;
     }
 }
