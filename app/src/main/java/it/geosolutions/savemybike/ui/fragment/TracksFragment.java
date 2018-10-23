@@ -80,9 +80,9 @@ public class TracksFragment extends Fragment {
                 getActivity().overridePendingTransition(R.anim.fadein, R.anim.fadeout);
             } else {
                 if(t.getValidationError() != null) {
-                    // TODO: validation error
+                    Toast.makeText(getContext(), R.string.track_invalid_message, Toast.LENGTH_LONG).show();
                 } else {
-                    Toast.makeText(getContext(), R.string.track_invalid, Toast.LENGTH_LONG).show();
+                    Toast.makeText(getContext(), R.string.track_invalid_message, Toast.LENGTH_LONG).show();
                 }
 
             }

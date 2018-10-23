@@ -37,6 +37,9 @@ public class TrackItemAdapter extends ArrayAdapter<TrackItem> {
     private	int resource;
     static class ViewHolder {
         @BindView(R.id.status) ImageView status;
+        @BindView(R.id.km_view) TextView kmView;
+        @BindView(R.id.dist_value) TextView distValue;
+        @BindView(R.id.invalid_message) TextView invalidMessage;
         public ViewHolder(View view) {
             ButterKnife.bind(this, view);
         }
@@ -76,10 +79,16 @@ public class TrackItemAdapter extends ArrayAdapter<TrackItem> {
             TrackDetailsActivity.inflateTrackDataToRecordView(track, view);
             if(track.isValid()) {
                 holder.status.setVisibility(View.GONE);
+                holder.kmView.setVisibility(View.VISIBLE);
+                holder.distValue.setVisibility(View.VISIBLE);
+                holder.invalidMessage.setVisibility(View.GONE);
             } else {
                 holder.status.setVisibility(View.VISIBLE);
                 holder.status.setImageResource(R.drawable.ic_error);
                 holder.status.setColorFilter(getContext().getResources().getColor(R.color.red));
+                holder.kmView.setVisibility(View.GONE);
+                holder.distValue.setVisibility(View.GONE);
+                holder.invalidMessage.setVisibility(View.VISIBLE);
             }
         }
 
