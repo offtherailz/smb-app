@@ -258,4 +258,7 @@
     <string name="validation_error_cause">Questa è la causa: %s</string>
     <string name="badge_won_title">Hai ottenuto un nuovo badge</string>
     <string name="prize_won_title">Hai vinto un premio !!!</string>
+    <string name="huauei_emui_powersaving_instructions"><![CDATA[<p><ol><li>Apri Gestione telefono</li><li>Seleziona \"Avvia\"</li><li>Trova Good_Go e spegni l\'interruttore</li><li>Verirfica che le impostazioni in \"Gestisci batch manualmente\" Good_go abbiano selezionate le opzioni \"Avvio Automatico\", \"Avvio secondario\" e \"Esegui in background\"</li></ol></p>]]></string>
+    <string name="protected_apps">Applicazioni Protette</string>
+    <string name="go_to_settings">Vai alle impostazioni</string>
 </resources>
