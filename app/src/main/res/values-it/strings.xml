@@ -276,9 +276,9 @@
     <html><body>
     <p>
         <ul>
-            <li>Clicca su Vai a impostazioni</li>
+            <li>Clicca su \"Vai alle impostazioni\"</li>
                 <li>Seleziona \"Avvio\" per aprire la lista delle applicazioni</li>
-                <li>Trova Good_Go e spegni l\'interruttore</li>
+                <li>Trova Good_Go nella lista e verifica che l\'interruttore a fianco del nome dell\'applicazione sia spento</li>
             <li>Verirfica che le impostazioni in \"Gestisci batch manualmente\" abbiano selezionate le opzioni \"Avvio Automatico\", \"Avvio secondario\" e \"Esegui in background\"</li>
         </ul>
     </p>
@@ -287,4 +287,5 @@
     <string name="protected_apps">Gestione Batteria</string>
     <string name="go_to_settings">Vai alle impostazioni</string>
     <string name="instructions_title">Istruzioni</string>
+    <string name="dont_show_this_again">Non mostrare più questo messaggio</string>
 </resources>

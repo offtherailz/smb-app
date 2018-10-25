@@ -29,9 +29,10 @@ import it.geosolutions.savemybike.R;
 
 public class PowerManager {
     public static List<Intent> POWERMANAGER_INTENTS = Arrays.asList(
+            // TODO: review and test this list
             new Intent().setComponent(new ComponentName("com.miui.securitycenter", "com.miui.permcenter.autostart.AutoStartManagementActivity")),
             new Intent().setComponent(new ComponentName("com.letv.android.letvsafe", "com.letv.android.letvsafe.AutobootManageActivity")),
-            new Intent().setComponent(new ComponentName("com.huawei.systemmanager", "com.huawei.systemmanager.power.ui.HwPowerManagerActivity")),
+            new Intent().setComponent(new ComponentName("com.huawei.systemmanager", "com.huawei.systemmanager.power.ui.HwPowerManagerActivity")), // Confirmed working
             new Intent().setComponent(new ComponentName("com.huawei.systemmanager", "com.huawei.systemmanager.optimize.process.ProtectActivity")),
             new Intent().setComponent(new ComponentName("com.coloros.safecenter", "com.coloros.safecenter.permission.startup.StartupAppListActivity")),
             new Intent().setComponent(new ComponentName("com.coloros.safecenter", "com.coloros.safecenter.startupapp.StartupAppListActivity")),
@@ -42,7 +43,11 @@ public class PowerManager {
             new Intent().setComponent(new ComponentName("com.asus.mobilemanager", "com.asus.mobilemanager.entry.FunctionActivity")).setData(android.net.Uri.parse("mobilemanager://function/entry/AutoStart"))
     );
 
-
+    /**
+     * Checks if there is an intent avaialble from the list of supported power managers, then show a dialog with the instructions for the user about how to proceed.
+     *
+     * @param context
+     */
     public static void startPowerSaverIntent(Context context) {
         SharedPreferences settings = context.getSharedPreferences("ProtectedApps", Context.MODE_PRIVATE);
         boolean skipMessage = settings.getBoolean("skipProtectedAppCheck", false);
@@ -68,14 +73,7 @@ public class PowerManager {
                     new AlertDialog.Builder(context)
                             .setTitle(Build.MANUFACTURER + " " + context.getResources().getString(R.string.protected_apps))
                             .setView(content)
-                            .setPositiveButton(R.string.go_to_settings, new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int which) {
-                                        // TODO give instructions for specific manager
-                                        context.startActivity(intent);
-
-
-                                }
-                            })
+                            .setPositiveButton(R.string.go_to_settings, (DialogInterface dialog, int which) -> context.startActivity(intent))
                             .setNegativeButton(android.R.string.cancel, null)
                             .show();
                     break;

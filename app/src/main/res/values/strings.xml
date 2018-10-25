@@ -290,29 +290,33 @@
     <string name="badge_won_title">You acquired a new badge</string>
     <string name="prize_won_title">You won a prize</string>
     <string name="powersaving_description"><![CDATA[
-        <p>GoodGo per tracciare i tuoi movimenti necessita di essere eseguita in background. Tuttavia alcuni dispositivi, per risparmiare batteria, terminano i processi in background arbitrariamente. Per evitare questo &egrave; necessario configurare il tuo dispositivo in maniera opportuna.</p>
+        <p>GoodGo needs to be executed in background to track your activities. Anyway some devices, to save power supply, stop the background processes. To avoid this you need to configure your application in the proper way</p>
     ]]></string>
     <string name="no_powersaving_instructions"><![CDATA[
+        <html><body>
         <p>
-        <p>&Egrave; necessario aggiungere l\'applicazione alla lista delle "Applicazioni Protette" (Impostazioni).</p>
-            <ol>
-                <li>Clicca su "Vai a impostazioni"</li>
-                <li>cerca Good_Go e aggiungila alla lista delle applicazioni protette</li>
-            </ol>
+        <p>Add the application to the list of "Protected Apps"</p>
+            <ul>
+                <li>Click on o to settings</li>
+                <li>look for Good_Go and add it to the list of protected apps</li>
+            </ul>
         </p>
+        </body></html>
     ]]></string>
     <string name="huauei_emui_powersaving_instructions"><![CDATA[
+    <html><body>
     <p>
-        <p>E\' necessario&nbsp;</p>
-        <ol>
-            <li>Clicca su Vai a impostazioni</li>
-                <li>Seleziona \"Avvia\" per aprire la lista delle applicazioni</li>
-                <li>Trova Good_Go e spegni l\'interruttore</li>
-            <li>Verirfica che le impostazioni in \"Gestisci batch manualmente\" abbiano selezionate le opzioni \"Avvio Automatico\", \"Avvio secondario\" e \"Esegui in background\"</li>
-        </ol>
+        <ul>
+            <li>Click on "Go to Settings"</li>
+                <li>Select "Start" to open the list of the application</li>
+                <li>look for Good Go and make you sure yo de-selected it</li>
+            <li>Check in  \"Manually manage Batch Process\" and verify that  \"Automatic Startup\", \"Secondary startup\" e \"Execute in background\" are selected</li>
+        </ul>
     </p>
+    </body></html>
     ]]></string>
     <string name="protected_apps">Protected apps</string>
     <string name="go_to_settings">Go to settings</string>
     <string name="instructions_title">Istruzioni</string>
+    <string name="dont_show_this_again">Don\'t show this message again</string>
 </resources>
