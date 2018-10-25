@@ -606,6 +606,7 @@ public class SaveMyBikeActivity extends SMBBaseActivity implements OnFragmentInt
                 fragment = new UserFragment();
                 break;
             }
+
             case R.id.navigation_badges:{
                 if(currentFragment != null && currentFragment instanceof UserFragment) {
                     ((UserFragment) currentFragment).setNavigation(R.id.navigation_badges);
@@ -630,6 +631,12 @@ public class SaveMyBikeActivity extends SMBBaseActivity implements OnFragmentInt
                     return;
                 }
                 fragment = new BikeListFragment();
+                break;
+            case R.id.navigation_about:
+                if (currentFragment != null && currentFragment instanceof AboutFragment) {
+                    return;
+                }
+                fragment = new AboutFragment();
                 break;
 
             default:
