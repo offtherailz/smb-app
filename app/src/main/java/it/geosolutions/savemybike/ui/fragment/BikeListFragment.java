@@ -164,6 +164,11 @@ public class BikeListFragment extends Fragment {
             }
         }).execute();
     }
+    @OnClick(R.id.add_bike_button)
+    public void onClick() {
+        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(Constants.PORTAL_ENDPOINT + "/bikes"));
+        startActivity(browserIntent);
+    }
 
     @Override
     public void onResume() {
