@@ -306,6 +306,12 @@ public class RecordFragment extends Fragment implements RecordingEventListener {
                 public void onClick(DialogInterface dialog, int which) {
                     startActivityForResult(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS), GPS_ENABLE_REQUEST);
                 }
+            })
+            .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+
+                }
             });
             builder.create().show();
         }
