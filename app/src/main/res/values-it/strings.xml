@@ -298,4 +298,6 @@
     <string name="go_to_settings">Vai alle impostazioni</string>
     <string name="instructions_title">Istruzioni</string>
     <string name="dont_show_this_again">Non mostrare più questo messaggio</string>
+    <string name="authors">Autori</string>
+    <string name="links">Links</string>
 </resources>

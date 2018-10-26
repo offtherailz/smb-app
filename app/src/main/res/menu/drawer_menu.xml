@@ -50,4 +50,13 @@
             android:visible="true"
             />
     </group>
+    <group
+        android:id="@+id/menu_footer"
+        android:checkableBehavior="none">
+    <item
+        android:id="@+id/menu_footer_version"
+        android:enabled="false"
+
+        android:title="@string/version" />
+    </group>
 </menu>

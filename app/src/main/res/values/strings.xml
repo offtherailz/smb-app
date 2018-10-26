@@ -1,5 +1,7 @@
 <resources>
     <string name="app_name" translatable="false">Good_Go</string>
+    <string name="smb_site_url" translatable="false">https://www.savemybike.eu/</string>
+    <string name="geosolutions_site_url" translatable="false">https://www.geo-solutions.it</string>
     <string name="version">Version</string>
     <string name="about">About</string>
     <string name="title_home">Home</string>
@@ -329,4 +331,6 @@
     <string name="go_to_settings">Go to settings</string>
     <string name="instructions_title">Istruzioni</string>
     <string name="dont_show_this_again">Don\'t show this message again</string>
+    <string name="authors">Authors</string>
+    <string name="links">Links</string>
 </resources>
