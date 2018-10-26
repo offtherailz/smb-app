@@ -13,6 +13,7 @@ import java.util.Random;
 import it.geosolutions.savemybike.R;
 import it.geosolutions.savemybike.data.Constants;
 import it.geosolutions.savemybike.ui.activity.LoginActivity;
+import it.geosolutions.savemybike.ui.activity.SaveMyBikeActivity;
 import it.geosolutions.savemybike.ui.adapters.BadgeAdapter;
 import it.geosolutions.savemybike.ui.utils.BadgeUtils;
 
@@ -65,12 +66,14 @@ public class UserNotificationManager {
 
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(mCtx, Constants.Channels.TRACKS_VALID_ID)
-                        .setSmallIcon(R.drawable.ic_line_track)
+                        .setSmallIcon(R.mipmap.ic_launcher_round)
                         .setBadgeIconType(R.drawable.ic_line_track)
-                        .setContentTitle(mCtx.getResources().getString(R.string.validation_error_title))
-                        .setContentText(mCtx.getResources().getString(R.string.validation_error_description));
+                        .setContentTitle(mCtx.getResources().getString(R.string.validation_success_title))
+                        .setContentText(mCtx.getResources().getString(R.string.validation_success_description))
+                        .setAutoCancel(true);
 
-        Intent resultIntent = new Intent(mCtx, LoginActivity.class);
+        Intent resultIntent = new Intent(mCtx, SaveMyBikeActivity.class);
+        resultIntent.putExtra(SaveMyBikeActivity.EXTRA_PAGE, SaveMyBikeActivity.EXTRA_TRACKS);
         PendingIntent pendingIntent = PendingIntent.getActivity(mCtx, 0, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         mBuilder.setContentIntent(pendingIntent);
 
@@ -84,12 +87,14 @@ public class UserNotificationManager {
 
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(mCtx, Constants.Channels.TRACK_INVALID_ID)
-                        .setSmallIcon(R.drawable.ic_line_track)
+                        .setSmallIcon(R.mipmap.ic_launcher_round)
                         .setBadgeIconType(R.drawable.ic_line_track)
                         .setContentTitle(mCtx.getResources().getString(R.string.validation_error_title))
-                        .setContentText(mCtx.getResources().getString(R.string.validation_error_description));
+                        .setContentText(mCtx.getResources().getString(R.string.validation_error_description))
+                        .setAutoCancel(true);
 
-        Intent resultIntent = new Intent(mCtx, LoginActivity.class);
+        Intent resultIntent = new Intent(mCtx, SaveMyBikeActivity.class);
+        resultIntent.putExtra(SaveMyBikeActivity.EXTRA_PAGE, SaveMyBikeActivity.EXTRA_TRACKS);
         PendingIntent pendingIntent = PendingIntent.getActivity(mCtx, 0, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         mBuilder.setContentIntent(pendingIntent);
 
@@ -106,8 +111,10 @@ public class UserNotificationManager {
                         .setSmallIcon(R.mipmap.ic_launcher_round)
                         .setBadgeIconType(getBadgeIconByName(badgeName))
                         .setContentTitle(mCtx.getResources().getString(R.string.badge_won_title))
-                        .setContentText(mCtx.getResources().getString(getBadgeTitleByName(badgeName)));
-        Intent resultIntent = new Intent(mCtx, LoginActivity.class);
+                        .setContentText(mCtx.getResources().getString(getBadgeTitleByName(badgeName)))
+                        .setAutoCancel(true);
+        Intent resultIntent = new Intent(mCtx, SaveMyBikeActivity.class);
+        resultIntent.putExtra(SaveMyBikeActivity.EXTRA_PAGE, SaveMyBikeActivity.EXTRA_BADGES);
         PendingIntent pendingIntent = PendingIntent.getActivity(mCtx, 0, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         mBuilder.setContentIntent(pendingIntent);
         if (mNotificationManager != null) {
@@ -128,8 +135,10 @@ public class UserNotificationManager {
                         .setSmallIcon(R.mipmap.ic_launcher_round)
                         .setBadgeIconType(R.drawable.ic_trophy)
                         .setContentTitle(mCtx.getResources().getString(R.string.prize_won_title))
-                        .setContentText(prizeName);
-        Intent resultIntent = new Intent(mCtx, LoginActivity.class);
+                        .setContentText(prizeName)
+                        .setAutoCancel(true);
+        Intent resultIntent = new Intent(mCtx, SaveMyBikeActivity.class);
+        resultIntent.putExtra(SaveMyBikeActivity.EXTRA_PAGE, SaveMyBikeActivity.EXTRA_MY_PRIZES);
         PendingIntent pendingIntent = PendingIntent.getActivity(mCtx, 0, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         mBuilder.setContentIntent(pendingIntent);
         if (mNotificationManager != null) {
