@@ -66,7 +66,7 @@ public class UserNotificationManager {
 
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(mCtx, Constants.Channels.TRACKS_VALID_ID)
-                        .setSmallIcon(R.mipmap.ic_launcher_round)
+                        .setSmallIcon(R.mipmap.ic_launcher_foreground)
                         .setBadgeIconType(R.drawable.ic_line_track)
                         .setContentTitle(mCtx.getResources().getString(R.string.validation_success_title))
                         .setContentText(mCtx.getResources().getString(R.string.validation_success_description))
@@ -87,7 +87,7 @@ public class UserNotificationManager {
 
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(mCtx, Constants.Channels.TRACK_INVALID_ID)
-                        .setSmallIcon(R.mipmap.ic_launcher_round)
+                        .setSmallIcon(R.mipmap.ic_launcher_foreground)
                         .setBadgeIconType(R.drawable.ic_line_track)
                         .setContentTitle(mCtx.getResources().getString(R.string.validation_error_title))
                         .setContentText(mCtx.getResources().getString(R.string.validation_error_description))
@@ -108,7 +108,7 @@ public class UserNotificationManager {
                 (android.app.NotificationManager) (android.app.NotificationManager) mCtx.getSystemService(Context.NOTIFICATION_SERVICE);
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(mCtx, Constants.Channels.BADGES_WON_ID)
-                        .setSmallIcon(R.mipmap.ic_launcher_round)
+                        .setSmallIcon(R.mipmap.ic_launcher_foreground)
                         .setBadgeIconType(getBadgeIconByName(badgeName))
                         .setContentTitle(mCtx.getResources().getString(R.string.badge_won_title))
                         .setContentText(mCtx.getResources().getString(getBadgeTitleByName(badgeName)))
@@ -132,7 +132,7 @@ public class UserNotificationManager {
                 (android.app.NotificationManager) (android.app.NotificationManager) mCtx.getSystemService(Context.NOTIFICATION_SERVICE);
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(mCtx, Constants.Channels.PRIZES_WON_ID)
-                        .setSmallIcon(R.mipmap.ic_launcher_round)
+                        .setSmallIcon(R.mipmap.ic_launcher_foreground)
                         .setBadgeIconType(R.drawable.ic_trophy)
                         .setContentTitle(mCtx.getResources().getString(R.string.prize_won_title))
                         .setContentText(prizeName)
