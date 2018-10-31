@@ -28,9 +28,6 @@ public class CompetitionPrizeAdapter extends ArrayAdapter<CompetitionPrize> {
 
     protected int resource;
 
-
-    protected boolean winner;
-
     static class ViewHolder {
         @BindView(R.id.prize_header) TextView header;
         @BindView(R.id.prize_description) TextView description;
