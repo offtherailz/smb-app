@@ -125,8 +125,6 @@ public class BikeDetailsActivity extends SMBBaseActivity implements OnMapReadyCa
         setUpBottomSheet();
         setupActionBar();
         setupViewPager();
-
-
     }
 
     private void selectFeature(String id) {
@@ -373,8 +371,8 @@ public class BikeDetailsActivity extends SMBBaseActivity implements OnMapReadyCa
     }
 
     public void inflateBikeDataToRecordView(Bike bike, View view) {
-        if(bike.getName() != null) {
-            bikeName.setText(bike.getName());
+        if(bike.getNickname() != null) {
+            bikeName.setText(bike.getNickname());
         }
     }
 

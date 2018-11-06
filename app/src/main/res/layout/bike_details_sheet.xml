@@ -19,7 +19,7 @@
         android:id="@+id/tap_action_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="?attr/actionBarSize"
         android:background="@android:color/white"
         android:orientation="vertical">
 
