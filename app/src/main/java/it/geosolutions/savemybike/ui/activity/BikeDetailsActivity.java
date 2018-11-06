@@ -204,7 +204,7 @@ public class BikeDetailsActivity extends SMBBaseActivity implements OnMapReadyCa
                             case BottomSheetBehaviorGoogleMapsLike.STATE_ANCHOR_POINT:
                                 // note; map resize in this case shold be performed only if the state change is due to a user bottom sheet interaction
                                 // when this happens programmatically, updatePadding should be triggered, but the map should not be re-centered
-                                // TODO: now it is i
+                                // TODO: now it is implemented using skipMove, we should find a better way to do this
                                 updatePadding();
                                 break;
                             case BottomSheetBehaviorGoogleMapsLike.STATE_HIDDEN:
