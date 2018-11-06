@@ -650,7 +650,7 @@ public class BottomSheetBehaviorGoogleMapsLike<V extends View> extends Coordinat
         mState = state;
         View bottomSheet = mViewRef.get();
         if (bottomSheet != null && mCallback != null) {
-//            mCallback.onStateChanged(bottomSheet, state);
+            bottomSheet.requestLayout();
             notifyStateChangedToListeners(bottomSheet, state);
         }
     }
