@@ -73,6 +73,8 @@ public class BikeDetailsActivity extends SMBBaseActivity implements OnMapReadyCa
     public static final String ADDRESS = "address";
     public static final String REPORTER_NAME = "reporter_name";
     private GoogleMap mMap;
+    // show info about selected feature
+    private Marker infoMarker;
     GeoJsonLayer layer;
     private Bike bike;
     JSONObject geojson;
@@ -132,7 +134,17 @@ public class BikeDetailsActivity extends SMBBaseActivity implements OnMapReadyCa
         bottomSheetBehaviour.setState(BottomSheetBehaviorGoogleMapsLike.STATE_ANCHOR_POINT);
         skipMove = true;
         details.setSelected(id);
+
         if(mMap != null) {
+            GeoJsonPointStyle style = getFeaturePointStyle(feature);
+            if(infoMarker == null) {
+                infoMarker = mMap.addMarker(feature.getMarkerOptions().position((((GeoJsonPoint) feature.getGeometry()).getCoordinates())));
+            }
+            infoMarker.setPosition((((GeoJsonPoint) feature.getGeometry()).getCoordinates()));
+            infoMarker.setTitle(style.getTitle());
+            infoMarker.setSnippet(style.getSnippet());
+            infoMarker.showInfoWindow();
+
             centerMapTo(id);
         }
     }
@@ -320,35 +332,7 @@ public class BikeDetailsActivity extends SMBBaseActivity implements OnMapReadyCa
                 for(GeoJsonFeature f: layer.getFeatures()) {
                     // calculate bounding box
                     builder.include(((GeoJsonPoint) f.getGeometry()).getCoordinates());
-
-                    // create popup
-                    String address = null;
-                    String observed_at = null;
-                    String reporter_name = null;
-                    ArrayList<String> snipplets = new ArrayList<String>();
-                    if(f.hasProperty(REPORTER_NAME) && !"".equals(f.getProperty(REPORTER_NAME))) {
-                        reporter_name = f.getProperty(REPORTER_NAME);
-                        if(reporter_name != null) {
-                            snipplets.add(reporter_name);
-                        }
-                    }
-                    if (f.hasProperty(ADDRESS) && !"".equals(f.getProperty(ADDRESS))) {
-                        address = f.getProperty(ADDRESS);
-                        if(address != null) {
-                            snipplets.add(address);
-                        }
-                    }
-                    if (f.hasProperty(OBSERVED_AT) && !"".equals(f.getProperty(OBSERVED_AT))) {
-                        observed_at = f.getProperty(OBSERVED_AT);
-                    }
-
-                    GeoJsonPointStyle pointStyle = new GeoJsonPointStyle();
-                    if(observed_at != null) {
-                        String dateFormatted = DateTimeFormat.forPattern("dd MMM, 'ore' HH:mm").print(new DateTime((observed_at)));
-                        pointStyle.setTitle(dateFormatted);
-                    }
-                    pointStyle.setSnippet(TextUtils.join(", ", snipplets));
-                    f.setPointStyle(pointStyle);
+                    // setFeaturePointStyle(f);
                 }
                 layer.addLayerToMap();
                 layer.setOnFeatureClickListener((feature) -> {
@@ -368,6 +352,41 @@ public class BikeDetailsActivity extends SMBBaseActivity implements OnMapReadyCa
 
             }
         }
+    }
+
+    /**
+     * Setup feature point style
+     * @param f
+     */
+    private GeoJsonPointStyle getFeaturePointStyle(GeoJsonFeature f) {
+        // create popup
+        String address = null;
+        String observed_at = null;
+        String reporter_name = null;
+        ArrayList<String> snipplets = new ArrayList<String>();
+        if(f.hasProperty(REPORTER_NAME) && !"".equals(f.getProperty(REPORTER_NAME))) {
+            reporter_name = f.getProperty(REPORTER_NAME);
+            if(reporter_name != null) {
+                snipplets.add(reporter_name);
+            }
+        }
+        if (f.hasProperty(ADDRESS) && !"".equals(f.getProperty(ADDRESS))) {
+            address = f.getProperty(ADDRESS);
+            if(address != null) {
+                snipplets.add(address);
+            }
+        }
+        if (f.hasProperty(OBSERVED_AT) && !"".equals(f.getProperty(OBSERVED_AT))) {
+            observed_at = f.getProperty(OBSERVED_AT);
+        }
+
+        GeoJsonPointStyle pointStyle = new GeoJsonPointStyle();
+        if(observed_at != null) {
+            String dateFormatted = DateTimeFormat.forPattern("dd MMM, 'ore' HH:mm").print(new DateTime((observed_at)));
+            pointStyle.setTitle(dateFormatted);
+        }
+        pointStyle.setSnippet(TextUtils.join(", ", snipplets));
+        return pointStyle;
     }
 
     public void inflateBikeDataToRecordView(Bike bike, View view) {
