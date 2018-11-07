@@ -1,12 +1,16 @@
 package it.geosolutions.savemybike.ui.activity;
 
 
+
 import android.content.Intent;
+
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
+
 import android.support.v4.view.GravityCompat;
+
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
@@ -23,6 +27,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.maps.android.data.Feature;
+
 import com.google.maps.android.data.geojson.GeoJsonFeature;
 import com.google.maps.android.data.geojson.GeoJsonLayer;
 import com.google.maps.android.data.geojson.GeoJsonPoint;
@@ -76,6 +81,7 @@ public class BikeDetailsActivity extends SMBBaseActivity implements OnMapReadyCa
     public static final int DATA_PADDING = 20;
     private static final String DETAILS = "details";
     public static final String OBSERVATION_ID = "observation_id";
+  
     private GoogleMap mMap;
 
     /* show info about selected feature
@@ -393,8 +399,6 @@ public class BikeDetailsActivity extends SMBBaseActivity implements OnMapReadyCa
                 }finally {
                     setLoading(false);
                 }
-
-
             }
         }
     }
