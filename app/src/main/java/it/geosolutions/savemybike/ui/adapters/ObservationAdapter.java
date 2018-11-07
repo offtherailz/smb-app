@@ -30,6 +30,7 @@ public abstract class ObservationAdapter extends ArrayAdapter<Observation> {
     }
     static class ViewHolder {
         @BindView(R.id.observed_at) TextView observedAt;
+        @BindView(R.id.observation_address) TextView observedAddress;
         public ViewHolder(View view) {
             ButterKnife.bind(this, view);
         }
@@ -57,6 +58,7 @@ public abstract class ObservationAdapter extends ArrayAdapter<Observation> {
         Observation o = getItem(position);
         if(o != null) {
             holder.observedAt.setText(o.observedAt);
+            holder.observedAddress.setText(o.address);
         }
         if(isSelected(o)) {
             view.setBackgroundColor(getContext().getResources().getColor(R.color.colorAccent));

@@ -41,6 +41,7 @@ import it.geosolutions.savemybike.data.server.RetrofitClient;
 import it.geosolutions.savemybike.data.server.SMBRemoteServices;
 import it.geosolutions.savemybike.model.Bike;
 import it.geosolutions.savemybike.model.Observation;
+import it.geosolutions.savemybike.ui.adapters.PopupAdapter;
 import it.geosolutions.savemybike.ui.adapters.ViewPagerAdapter;
 import it.geosolutions.savemybike.ui.callback.OnFragmentInteractionListener;
 import it.geosolutions.savemybike.ui.custom.BottomSheetBehaviorGoogleMapsLike;
@@ -70,6 +71,7 @@ public class BikeDetailsActivity extends SMBBaseActivity implements OnMapReadyCa
 
     // default padding for points in map
     public static final int DATA_PADDING = 20;
+    private static final String DETAILS = "details";
     private GoogleMap mMap;
 
     /* show info about selected feature
@@ -330,6 +332,7 @@ public class BikeDetailsActivity extends SMBBaseActivity implements OnMapReadyCa
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+        mMap.setInfoWindowAdapter(new PopupAdapter(getLayoutInflater()));
         displayData();
     }
     @Override
@@ -361,7 +364,7 @@ public class BikeDetailsActivity extends SMBBaseActivity implements OnMapReadyCa
                 for(GeoJsonFeature f: layer.getFeatures()) {
                     // calculate bounding box
                     builder.include(((GeoJsonPoint) f.getGeometry()).getCoordinates());
-                    // setFeaturePointStyle(f);
+                    f.setPointStyle(getFeaturePointStyle(f));
                 }
                 layer.addLayerToMap();
                 layer.setOnFeatureClickListener((feature) -> {
@@ -392,29 +395,50 @@ public class BikeDetailsActivity extends SMBBaseActivity implements OnMapReadyCa
         String address = null;
         String observed_at = null;
         String reporter_name = null;
-        ArrayList<String> snipplets = new ArrayList<String>();
+        String description = null;
+        ArrayList<String> observationInfo = new ArrayList<String>();
+
+        // get information from feature properties
         if(f.hasProperty(REPORTER_NAME) && !"".equals(f.getProperty(REPORTER_NAME))) {
             reporter_name = f.getProperty(REPORTER_NAME);
             if(reporter_name != null) {
-                snipplets.add(reporter_name);
+                observationInfo.add(reporter_name);
             }
         }
         if (f.hasProperty(ADDRESS) && !"".equals(f.getProperty(ADDRESS))) {
             address = f.getProperty(ADDRESS);
             if(address != null) {
-                snipplets.add(address);
+                observationInfo.add(address);
             }
+        }
+        if (f.hasProperty(DETAILS) && !"".equals(f.getProperty(DETAILS))) {
+            description = f.getProperty(DETAILS);
         }
         if (f.hasProperty(OBSERVED_AT) && !"".equals(f.getProperty(OBSERVED_AT))) {
             observed_at = f.getProperty(OBSERVED_AT);
         }
 
         GeoJsonPointStyle pointStyle = new GeoJsonPointStyle();
+
+        // create title for info window
         if(observed_at != null) {
             String dateFormatted = DateTimeFormat.forPattern("dd MMM, 'ore' HH:mm").print(new DateTime((observed_at)));
             pointStyle.setTitle(dateFormatted);
         }
-        pointStyle.setSnippet(TextUtils.join(", ", snipplets));
+
+        // create snipplet for info window
+        String snipplet = "";
+        if(description != null && !"".equals(description)) {
+            snipplet += description + ". \n";
+        }
+        String observationInfoString = TextUtils.join(" - ", observationInfo);
+        if(observationInfoString != null && !"".equals(observationInfoString)) {
+            snipplet += "(" + observationInfoString + ")";
+        }
+
+        if(!"".equals(snipplet)) {
+            pointStyle.setSnippet(snipplet);
+        }
         return pointStyle;
     }
 
