@@ -1,11 +1,9 @@
 package it.geosolutions.savemybike.ui.activity;
 
 
-import android.app.Activity;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
@@ -16,15 +14,12 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
-import com.google.maps.android.data.Feature;
 import com.google.maps.android.data.geojson.GeoJsonFeature;
 import com.google.maps.android.data.geojson.GeoJsonLayer;
 import com.google.maps.android.data.geojson.GeoJsonPoint;
@@ -38,8 +33,6 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.net.SocketTimeoutException;
 import java.util.ArrayList;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -52,7 +45,6 @@ import it.geosolutions.savemybike.ui.adapters.ViewPagerAdapter;
 import it.geosolutions.savemybike.ui.callback.OnFragmentInteractionListener;
 import it.geosolutions.savemybike.ui.custom.BottomSheetBehaviorGoogleMapsLike;
 import it.geosolutions.savemybike.ui.fragment.BikeDetailsFragment;
-import it.geosolutions.savemybike.ui.fragment.BikeListFragment;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -67,34 +59,58 @@ import retrofit2.Response;
  */
 public class BikeDetailsActivity extends SMBBaseActivity implements OnMapReadyCallback, OnFragmentInteractionListener {
     private static final String TAG = "BIKEDETAILS";
-    public static final String OBSERVED_AT = "observed_at";
-    private static final String PROPERTY_OBSERVED_AT = OBSERVED_AT;
-    private static final String LAST_UPDATES = "LAST_UPDATES";
+
+    // content
+    public static final String BIKE = "BIKE";
+
+    // useful property names of the observations' features in the GeoJson
+    private static final String OBSERVED_AT = "observed_at";;
     public static final String ADDRESS = "address";
     public static final String REPORTER_NAME = "reporter_name";
-    private GoogleMap mMap;
-    // show info about selected feature
-    private Marker infoMarker;
-    GeoJsonLayer layer;
-    private Bike bike;
-    JSONObject geojson;
-    private boolean layoutDone = false;
-    public static final String BIKE = "BIKE";
-    View bottomSheet;
-    BottomSheetBehaviorGoogleMapsLike bottomSheetBehaviour;
-    View tapActionLayout;
-    Toolbar toolbar;
-    BikeDetailsFragment details = new BikeDetailsFragment();
 
-    @BindView(R.id.bike_name) TextView bikeName;
+    // default padding for points in map
+    public static final int DATA_PADDING = 20;
+    private GoogleMap mMap;
+
+    /* show info about selected feature
+     * This marker is used to show the InfoWindow of the selected item
+     * (because you can't directly access to the GeoJsonLayer's Marker object using google API)
+     */
+    private Marker infoMarker;
+
+    // layer with positions
+    GeoJsonLayer layer;
+
+    // the bike selected
+    private Bike bike;
+
+    // the geojson with observations
+    JSONObject geojson;
+
+    // flag that indicates when layout of the view is done, useful if you need to get some info from the map
+    // like size or bounding box
+    private boolean layoutDone = false;
+
+    // flag to identify first render. used to avoid skip map animation on first visualization
     private boolean firstRender =true;
 
-    /**
+    /*
      * Flag to skip move to re-center the map, used to
      * skip map resize when maker has been selected, clicking on a
      * feature
      */
     private boolean skipMove;
+
+    // view component's references
+    View bottomSheet;
+    BottomSheetBehaviorGoogleMapsLike bottomSheetBehaviour;
+    View tapActionLayout;
+    Toolbar toolbar;
+    BikeDetailsFragment details = new BikeDetailsFragment();
+    @BindView(R.id.bike_name) TextView bikeName;
+    @BindView(R.id.button_expand)
+    ImageView toggleExpand;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -170,8 +186,12 @@ public class BikeDetailsActivity extends SMBBaseActivity implements OnMapReadyCa
         toolbar.bringToFront();
     }
 
+    /**
+     * Bind to component's dependencies.
+     */
     private void bindDependencies() {
         ButterKnife.bind(this);
+        // TODO: check if these bindings are possible using ButterKnife
         if(bottomSheet == null) {
             bottomSheet = findViewById(R.id.bike_details_bottom_sheet);
         }
@@ -186,7 +206,6 @@ public class BikeDetailsActivity extends SMBBaseActivity implements OnMapReadyCa
         bottomSheetBehaviour = BottomSheetBehaviorGoogleMapsLike.from(bottomSheet);
 
         bottomSheetBehaviour.setPeekHeight(300);
-
         bottomSheetBehaviour.setState(BottomSheetBehaviorGoogleMapsLike.STATE_COLLAPSED);
         bottomSheetBehaviour.addBottomSheetCallback(new BottomSheetBehaviorGoogleMapsLike.BottomSheetCallback() {
                     @Override
@@ -194,17 +213,20 @@ public class BikeDetailsActivity extends SMBBaseActivity implements OnMapReadyCa
                         switch (newState) {
                             case BottomSheetBehaviorGoogleMapsLike.STATE_COLLAPSED:
                                 updatePadding();
+                                toggleExpand.setImageResource(R.drawable.ic_expand_up);
                                 break;
                             case BottomSheetBehaviorGoogleMapsLike.STATE_DRAGGING:
 
                                 break;
                             case BottomSheetBehaviorGoogleMapsLike.STATE_EXPANDED:
+                                toggleExpand.setImageResource(R.drawable.ic_expand_down);
                                 updatePadding();
                                 break;
                             case BottomSheetBehaviorGoogleMapsLike.STATE_ANCHOR_POINT:
-                                // note; map resize in this case shold be performed only if the state change is due to a user bottom sheet interaction
+                                // note; map resize in this case should be performed only if the state change is due to a user bottom sheet interaction
                                 // when this happens programmatically, updatePadding should be triggered, but the map should not be re-centered
                                 // TODO: now it is implemented using skipMove, we should find a better way to do this
+                                toggleExpand.setImageResource(R.drawable.ic_expand_down);
                                 updatePadding();
                                 break;
                             case BottomSheetBehaviorGoogleMapsLike.STATE_HIDDEN:
@@ -214,7 +236,6 @@ public class BikeDetailsActivity extends SMBBaseActivity implements OnMapReadyCa
                                 break;
                         }
                     }
-
                     @Override
                     public void onSlide(@NonNull View bottomSheet, float slideOffset) {
                     }
@@ -223,8 +244,16 @@ public class BikeDetailsActivity extends SMBBaseActivity implements OnMapReadyCa
             switch (bottomSheetBehaviour.getState()) {
                 case BottomSheetBehaviorGoogleMapsLike.STATE_COLLAPSED:
                     bottomSheetBehaviour.setState(BottomSheetBehaviorGoogleMapsLike.STATE_ANCHOR_POINT);
+                    break;
+                case BottomSheetBehaviorGoogleMapsLike.STATE_ANCHOR_POINT:
+                    bottomSheetBehaviour.setState(BottomSheetBehaviorGoogleMapsLike.STATE_COLLAPSED);
+                    break;
+                case BottomSheetBehaviorGoogleMapsLike.STATE_EXPANDED:
+                    bottomSheetBehaviour.setState(BottomSheetBehaviorGoogleMapsLike.STATE_ANCHOR_POINT);
+                    break;
             }
         });
+
     }
 
     public void updatePadding() {
@@ -248,11 +277,11 @@ public class BikeDetailsActivity extends SMBBaseActivity implements OnMapReadyCa
                 skipMove = false;
             } else if(firstRender) {
                 mMap.moveCamera(CameraUpdateFactory
-                        .newLatLngBounds(bounds, 10));
+                        .newLatLngBounds(bounds, DATA_PADDING));
                 firstRender = false;
             } else {
                 mMap.animateCamera(CameraUpdateFactory
-                        .newLatLngBounds(bounds, 10));
+                        .newLatLngBounds(bounds, DATA_PADDING));
             }
 
 
@@ -341,7 +370,7 @@ public class BikeDetailsActivity extends SMBBaseActivity implements OnMapReadyCa
                 // zoom to bounding box
                 try {
                     LatLngBounds bounds = builder.build();
-                    mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, 40));
+                    mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, DATA_PADDING * 4));
                 } catch(IllegalStateException e) {
                   Log.w(TAG, "No observation");
 
@@ -417,6 +446,10 @@ public class BikeDetailsActivity extends SMBBaseActivity implements OnMapReadyCa
                 ((TextView) v.findViewById(R.id.empty_description)).setText(R.string.server_took_too_long_to_respond);
             }
         }
+        if(bottomSheet != null) {
+            bottomSheet.setVisibility(View.GONE);
+        }
+
     }
     public void centerMapTo(String id) {
         if(layer != null & mMap != null) {
@@ -432,7 +465,7 @@ public class BikeDetailsActivity extends SMBBaseActivity implements OnMapReadyCa
         GeoJsonFeature last = null;
         if(layer != null & mMap != null) {
             for(GeoJsonFeature f : layer.getFeatures()) {
-                if(last == null || f.getProperty(PROPERTY_OBSERVED_AT).compareTo(last.getProperty(PROPERTY_OBSERVED_AT)) < 0) {
+                if(last == null || f.getProperty(OBSERVED_AT).compareTo(last.getProperty(OBSERVED_AT)) < 0) {
                     last = f;
                 }
             }

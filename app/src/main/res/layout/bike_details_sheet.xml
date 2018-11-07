@@ -1,16 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
- BottomSheet content
- Has the Session Record view as top bar and a tab panel
+ BottomSheet content for bike details
+ Contains the header and a view pager
  -->
 <LinearLayout
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
     app:layout_behavior="it.geosolutions.savemybike.ui.custom.BottomSheetBehaviorGoogleMapsLike"
-
     app:anchorPoint="@dimen/bottom_sheet_anchor_point"
-
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">

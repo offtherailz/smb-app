@@ -42,7 +42,7 @@
             android:layout_height="match_parent"
             tools:context=".ui.activity.BikeDetailsActivity" />
         <include layout="@layout/loading_container" android:id="@+id/loading_container"/>
-        <include layout="@layout/empty_view" android:id="@+id/emptyView"/>
+        <include layout="@layout/empty_bike_details" android:id="@+id/emptyView"/>
     </FrameLayout>
 
     <!-- Bottom sheet -->
