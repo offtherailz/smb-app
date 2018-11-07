@@ -69,6 +69,7 @@ public class BikeDetailsFragment extends Fragment {
             if(o.id != null && o.id.equals(selected)) {
                 selectedItem = o;
                 observationList.setItemChecked(i, true);
+                observationList.smoothScrollToPosition(i);
                 observationAdapter.notifyDataSetChanged();
             }
         }
@@ -110,6 +111,8 @@ public class BikeDetailsFragment extends Fragment {
             selectedItem = (Observation) parent.getItemAtPosition(position);
             if(callbacks != null) {
                 callbacks.onSelect((Observation) parent.getItemAtPosition(position));
+
+
             }
         }));
         observationAdapter.clear();
@@ -155,6 +158,9 @@ public class BikeDetailsFragment extends Fragment {
             for (int i=0;i<jArray.length();i++){
 
                 observations.add(new Observation(jArray.getJSONObject(i)));
+                observations.add(new Observation(jArray.getJSONObject(i)));
+                observations.add(new Observation(jArray.getJSONObject(i)));
+
             }
         }
         } catch (JSONException e) {
