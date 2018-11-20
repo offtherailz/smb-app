@@ -1172,8 +1172,14 @@ public class SaveMyBikeActivity extends SMBBaseActivity implements OnFragmentInt
                                     authStateManager.getCurrent().createTokenRefreshRequest(),
                                     authStateManager.getCurrent().getClientAuthentication(),
                                     (tokenResponse, authException) -> {
-                                        Long newExpiringDate = tokenResponse.accessTokenExpirationTime;
-                                        Log.i(TAG, "running token successful. Next token will expire at " + new Date(newExpiringDate).toString());
+                                        if(tokenResponse != null) {
+                                            Long newExpiringDate = tokenResponse.accessTokenExpirationTime;
+                                            Log.i(TAG, "running token successful. Next token will expire at " + new Date(newExpiringDate).toString());
+                                        } else {
+                                            Log.e(TAG, "Error when refreshing access token", authException);
+                                            // TODO: check if it is an authorization error.
+                                            // TODO: if network error, postpone the refresh
+                                        }
                                         authStateManager.updateAfterTokenResponse(tokenResponse, authException);
                                     }
                             );
